@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import IntroHero from "./components/IntroHero";
 import SkillsReveal from "./components/SkillsReveal";
-import NarrativeFlow from "./components/NarrativeFlow";
+import ExploreWork from "./components/ExploreWork";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -36,7 +36,7 @@ function App() {
     <main>
       <IntroHero />
       <SkillsReveal />
-      <NarrativeFlow />
+      <ExploreWork />
     </main>
   );
 }
