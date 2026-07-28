@@ -31,15 +31,7 @@ const SkillsReveal = () => {
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) {
-      setAnimationReady(false);
-      setDisplayedIntro(fullIntro);
-      setVisibleGroups(skillGroups.length);
-      setSceneBg("#050505");
-      setDropScale(0);
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     try {
       gsap.registerPlugin(ScrollTrigger);
@@ -89,11 +81,7 @@ const SkillsReveal = () => {
         ctx.revert();
       };
     } catch {
-      setAnimationReady(false);
-      setDisplayedIntro(fullIntro);
-      setVisibleGroups(skillGroups.length);
-      setSceneBg("#050505");
-      setDropScale(0);
+      // Fallback: keep initial state
     }
   }, []);
 
