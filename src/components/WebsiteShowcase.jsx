@@ -44,11 +44,11 @@ const WebsiteShowcase = ({ project }) => {
     <section ref={ref} className="section-shell" aria-label="Luxury Business Website">
       <div className="mx-auto grid max-w-[1400px] gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <div className="website-copy">
-          <h2 className="section-title mb-4 font-semibold">{project.title}</h2>
-          <p className="mb-6 max-w-xl text-lg text-[var(--text-muted)]">{project.subtitle}</p>
+          <h2 className="section-title mb-4 font-semibold text-[clamp(1.25rem,3vw,2.25rem)]">{project.title}</h2>
+          <p className="mb-6 max-w-xl text-[clamp(0.95rem,1.5vw,1.125rem)] text-[var(--text-muted)]">{project.subtitle}</p>
           <ul className="space-y-3">
             {project.details.map((item) => (
-              <li key={item} className="text-base text-[var(--text-muted)]">{item}</li>
+              <li key={item} className="text-[clamp(0.875rem,1.2vw,1rem)] text-[var(--text-muted)]">{item}</li>
             ))}
           </ul>
         </div>

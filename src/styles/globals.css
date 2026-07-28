@@ -43,7 +43,7 @@ main {
 }
 
 .section-shell {
-  padding: 80px 20px;
+  padding: clamp(48px, 10vw, 80px) clamp(16px, 5vw, 20px);
 }
 
 @media (min-width: 768px) {

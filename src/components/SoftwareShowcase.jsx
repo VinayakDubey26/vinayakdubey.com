@@ -42,12 +42,12 @@ const SoftwareShowcase = ({ project }) => {
   return (
     <section ref={sectionRef} className="section-shell" aria-label="Business Management Software">
       <div className="mx-auto max-w-[1400px]">
-        <h2 className="section-title mb-5 font-semibold">{project.title}</h2>
-        <p className="mb-10 max-w-3xl text-lg text-[var(--text-muted)]">{project.subtitle}</p>
+        <h2 className="section-title mb-5 font-semibold text-[clamp(1.25rem,3vw,2.25rem)]">{project.title}</h2>
+        <p className="mb-10 max-w-3xl text-[clamp(0.95rem,1.5vw,1.125rem)] text-[var(--text-muted)]">{project.subtitle}</p>
 
         <div className="mb-8 flex flex-wrap gap-3">
           {project.highlights.map((item) => (
-            <span key={item} className="rounded-full border border-[var(--border)] px-4 py-2 text-sm text-[var(--text-muted)]">{item}</span>
+            <span key={item} className="rounded-full border border-[var(--border)] px-3 py-1.5 md:px-4 md:py-2 text-[clamp(0.75rem,1vw,0.875rem)] text-[var(--text-muted)]">{item}</span>
           ))}
         </div>
 

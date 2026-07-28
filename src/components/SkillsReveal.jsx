@@ -88,15 +88,15 @@ const SkillsReveal = () => {
   const showCursor = animationReady && displayedIntro.length < fullIntro.length;
 
   return (
-    <section ref={sectionRef} className="skills-reveal -mt-[28vh] h-screen min-h-screen text-[#f5f5f7]" style={{ backgroundColor: sceneBg }} aria-label="Skills Reveal">
-      <div className="skills-pin relative flex h-screen min-h-screen items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="skills-reveal -mt-[28vh] min-h-svh text-[#f5f5f7]" style={{ backgroundColor: sceneBg }} aria-label="Skills Reveal">
+      <div className="skills-pin relative flex min-h-svh items-center justify-center overflow-hidden">
         <div
-          className="pointer-events-none absolute left-1/2 top-[45%] z-0 h-[8vw] w-[8vw] rounded-full bg-[#050505]"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[clamp(32px,8vw,120px)] w-[clamp(32px,8vw,120px)] rounded-full bg-[#050505]"
           style={{ transform: `translate(-50%, -50%) scale(${dropScale})` }}
           aria-hidden="true"
         />
-        <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(24px,5vw,64px)] text-[#f5f5f7]">
-          <p className="mb-[clamp(24px,4vh,48px)] whitespace-pre-wrap text-[clamp(1.5rem,2.6vw,3rem)] font-medium leading-[1.15] tracking-[-0.02em]">
+        <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
+          <p className="mb-[clamp(20px,4vh,48px)] whitespace-pre-wrap text-[clamp(1.25rem,2.6vw,3rem)] font-medium leading-[1.15] tracking-[-0.02em]">
             {displayedIntro}
             {showCursor && <span className="type-cursor">|</span>}
           </p>

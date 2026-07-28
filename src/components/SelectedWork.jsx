@@ -7,7 +7,7 @@ const SelectedWork = () => {
   const [modalProject, setModalProject] = useState(null);
 
   return (
-    <section className="py-24 md:py-32 bg-[#050505] text-[#f5f5f7]">
+    <section className="py-16 md:py-24 lg:py-32 bg-[#050505] text-[#f5f5f7]">
       <div className="max-w-[1600px] mx-auto">
         <div className="px-6 md:px-10 mb-12 md:mb-16">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">

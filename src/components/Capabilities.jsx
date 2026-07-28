@@ -33,9 +33,9 @@ const Capabilities = () => {
         <h2 className="section-title mb-8 font-semibold">Capabilities</h2>
         <div className="grid gap-4 lg:grid-cols-3">
           {capabilities.map((item, idx) => (
-            <article key={item.title} className="cap-card surface-card p-8" style={{ zIndex: 3 - idx }}>
-              <h3 className="mb-3 text-2xl font-semibold tracking-tight">{item.title}</h3>
-              <p className="text-[var(--text-muted)]">{item.description}</p>
+            <article key={item.title} className="cap-card surface-card p-6 md:p-8" style={{ zIndex: 3 - idx }}>
+              <h3 className="mb-3 text-[clamp(1.25rem,2.5vw,1.5rem)] font-semibold tracking-tight">{item.title}</h3>
+              <p className="text-[clamp(0.875rem,1.2vw,1rem)] text-[var(--text-muted)]">{item.description}</p>
             </article>
           ))}
         </div>
