@@ -75,14 +75,14 @@ const ProjectCard = ({ project, onViewDetails }) => {
           {hasLiveUrl && (
             <button
               onClick={handleVisitWebsite}
-              className="rounded-lg bg-white/10 px-2.5 md:px-3.5 py-1 md:py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/16 active:scale-[0.97]"
+              className="rounded-lg bg-white/10 px-2.5 md:px-3.5 py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/16 active:scale-[0.97] min-h-[44px]"
             >
               Visit Website
             </button>
           )}
           <button
             onClick={handleViewDetails}
-            className="rounded-lg border border-white/12 px-2.5 md:px-3.5 py-1 md:py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/6 active:scale-[0.97]"
+            className="rounded-lg border border-white/12 px-2.5 md:px-3.5 py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/6 active:scale-[0.97] min-h-[44px]"
           >
             View Details
           </button>
