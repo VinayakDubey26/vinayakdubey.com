@@ -34,23 +34,19 @@ const IntroHero = () => {
   return (
     <section
       ref={ref}
-      className="h-screen min-h-screen bg-[var(--bg)] px-5 md:px-[6vw]"
+      className="flex min-h-svh items-center justify-center bg-[var(--bg)] px-5 md:px-[6vw]"
       aria-label="Intro"
     >
-      <div className="mx-auto flex h-full max-w-[1400px] items-center justify-center overflow-visible">
-        <div className="relative w-full overflow-visible text-center">
-          <p className="intro-hi font-hero-display pointer-events-none absolute inset-0 flex items-center justify-center pb-2 text-[clamp(2.8rem,6vw,6.2rem)] font-medium leading-[1.04]">
-            Hi
-          </p>
-          <h1 className="intro-main font-hero-display overflow-visible whitespace-normal pb-6 text-[clamp(2.8rem,6vw,6.2rem)] font-semibold leading-[1.04] md:whitespace-nowrap">
-            I am Vinayak Dubey
-          </h1>
-        </div>
+      <div className="relative w-full max-w-[1400px] text-center">
+        <p className="intro-hi font-hero-display pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center text-[clamp(2rem,6vw,6.2rem)] font-medium leading-[1.04]">
+          Hi
+        </p>
+        <h1 className="intro-main font-hero-display overflow-visible pt-[1.1em] text-[clamp(2rem,6vw,6.2rem)] font-semibold leading-[1.08] md:leading-[1.04]" style={{ textWrap: "balance" }}>
+          I am Vinayak Dubey
+        </h1>
       </div>
     </section>
   );
 };
 
 export default IntroHero;
-
-
