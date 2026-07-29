@@ -259,11 +259,11 @@ export const softwareProjects = [
     category: "software",
     folder: "DP Jewels",
     images: [
+      "natural-diamond.png",
       "all-stock.png",
       "all-transaction.png",
       "analytics.png",
       "bills.png",
-      "natural-diamond.png",
       "party-ledger.png",
       "trading.png",
     ],
