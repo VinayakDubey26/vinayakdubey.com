@@ -2,19 +2,14 @@ import { getProjectImage } from "../data/projectsData";
 
 const ProjectCard = ({ project, onViewDetails }) => {
   const hero = getProjectImage(project.folder, project.images[0]);
-  const handleCardClick = () => {
-    onViewDetails(project);
-  };
+  const isWebsite = project.category === "website";
 
   const handleVisitWebsite = (e) => {
     e.stopPropagation();
-    if (project.liveUrl) {
-      window.open(project.liveUrl, "_blank", "noopener,noreferrer");
-    } else {
-      onViewDetails(project);
-    }
+    project.liveUrl
+      ? window.open(project.liveUrl, "_blank", "noopener,noreferrer")
+      : onViewDetails(project);
   };
-
   const handleViewDetails = (e) => {
     e.stopPropagation();
     onViewDetails(project);
@@ -73,12 +68,14 @@ const ProjectCard = ({ project, onViewDetails }) => {
 
         {/* Buttons */}
         <div className="mt-2 md:mt-3 flex flex-wrap gap-1.5 md:gap-2">
-          <button
-            onClick={handleVisitWebsite}
-            className="rounded-lg bg-white/10 px-2.5 md:px-3.5 py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/16 active:scale-[0.97] min-h-[44px]"
-          >
-            Visit Website
-          </button>
+          {isWebsite && (
+            <button
+              onClick={handleVisitWebsite}
+              className="rounded-lg bg-white/10 px-2.5 md:px-3.5 py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/16 active:scale-[0.97] min-h-[44px]"
+            >
+              Visit Website
+            </button>
+          )}
           <button
             onClick={handleViewDetails}
             className="rounded-lg border border-white/12 px-2.5 md:px-3.5 py-1.5 text-[10px] md:text-[11px] font-medium transition hover:bg-white/6 active:scale-[0.97] min-h-[44px]"
