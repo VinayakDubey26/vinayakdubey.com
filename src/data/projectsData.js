@@ -135,12 +135,14 @@ export const softwareProjects = [
     id: "business-os",
     title: "Carat Business OS",
     status: "In Development",
+    accent: "#D6A84F",
+    accentSecondary: "#4F7CFF",
     categoryLabel: "DESKTOP SOFTWARE",
     description:
-      "A desktop-first business operating system built for diamond businesses to simplify inventory, purchasing, sales, accounting, reporting and everyday operations through one unified platform.",
+      "A desktop-first operating system for diamond businesses that unifies inventory, purchases, sales, accounting, reporting and daily office workflows.",
     impact:
-      "Streamlines daily business operations from inventory to accounting in one desktop application.",
-    technologies: ["Python", "SQLite", "Desktop", "Offline-first"],
+      "Unifies inventory, purchases, sales, accounting and reporting into one connected platform for diamond businesses.",
+    technologies: ["React", "TypeScript", "FastAPI", "Python", "PostgreSQL", "Tauri"],
     category: "software",
     folder: "Carat OS",
     images: [
@@ -154,17 +156,57 @@ export const softwareProjects = [
       "backups.webp",
       "user-roles.webp",
     ],
+    whatIBuilt:
+      "I built a desktop-first business operating system designed specifically for diamond businesses. It brings inventory, purchases, sales, customer and supplier records, accounting workflows, approvals, reports, documents, users and business settings into one connected platform.",
+    whyIBuiltIt:
+      "Diamond offices often rely on separate spreadsheets, accounting tools, handwritten processes and disconnected software. This creates repeated data entry, poor visibility and a steep learning curve for traditional business owners. I built Carat Business OS to make the complete office easier to operate through guided workflows, clear business language and one unified source of information.",
+    includes: [
+      "Diamond inventory and stock tracking",
+      "Purchase and sales workflows",
+      "Customer and supplier management",
+      "Collections, payments, receivables and payables",
+      "Accounting and ledger workflows",
+      "Business dashboards and reporting",
+      "Approvals and activity tracking",
+      "User roles and permissions",
+      "Document generation",
+      "Import and export workflows",
+      "Backup and restore management",
+      "Multi-user local network support",
+      "Offline-first desktop operation",
+      "Licensing and activation foundation",
+    ],
+    howIBuiltIt:
+      "I designed the product architecture, business workflows, data model, APIs, permissions, desktop experience and operational logic. The product was built as a full-stack system rather than a visual prototype.",
+    techStack: {
+      Frontend: ["React", "TypeScript", "Vite"],
+      Desktop: ["Tauri"],
+      Backend: ["FastAPI", "Python", "SQLAlchemy", "Alembic"],
+      Database: ["PostgreSQL"],
+      "Architecture & Infrastructure": [
+        "REST APIs",
+        "Role-based access control",
+        "Local network architecture",
+        "Offline-first desktop architecture",
+        "Database migrations",
+        "Automated testing",
+        "Docker for supporting services",
+      ],
+    },
   },
   {
     id: "business-mobile",
     title: "Carat Mobile",
-    status: "Built",
+    status: "In Development",
+    detailVariant: "mobile-split",
+    accent: "#D6A84F",
+    accentSecondary: "#4F7CFF",
     categoryLabel: "MOBILE APPLICATION",
     description:
-      "A companion mobile application designed for business owners to monitor operations, approvals, reports and business activity from anywhere.",
+      "An owner-focused companion app for monitoring business activity, reviewing reports and handling approvals away from the office.",
     impact:
-      "Keeps business owners connected to their operations with real-time dashboards and approvals.",
-    technologies: ["React Native", "Mobile", "Dashboard"],
+      "Keeps business owners connected to operations with dashboards, reports and approvals from anywhere.",
+    technologies: ["React Native", "Expo", "TypeScript", "REST APIs", "FastAPI"],
     category: "software",
     folder: "Carat Mobile",
     images: [
@@ -174,6 +216,35 @@ export const softwareProjects = [
       "approval.webp",
       "dark.webp",
     ],
+    cardPreview: {
+      center: "dashboard.webp",
+      left: "activity.webp",
+      right: "reports.webp",
+    },
+    whatIBuilt:
+      "I built a mobile companion for Carat Business OS focused on business owners rather than employees. It gives owners access to dashboards, reports, approvals and recent business activity without requiring them to remain at their office computer.",
+    whyIBuiltIt:
+      "Business owners often leave the office but still need visibility into collections, payments, approvals, sales and daily activity. Carat Mobile was created to keep the owner connected to important decisions while the desktop system continues running the business inside the office.",
+    includes: [
+      "Owner dashboard",
+      "Business summaries",
+      "Reports",
+      "Approval workflows",
+      "Activity timeline",
+      "Collections and payment visibility",
+      "Operational alerts and pending actions",
+      "Light and dark interface support",
+      "Secure connection to the Carat platform",
+      "Mobile entitlement and access controls",
+    ],
+    howIBuiltIt:
+      "I designed the mobile information architecture, owner workflows, API integration, authentication flow, approval experience, reporting views and responsive mobile interface as part of the wider Carat product ecosystem.",
+    techStack: {
+      Mobile: ["React Native", "Expo", "TypeScript"],
+      Integration: ["REST APIs", "Secure authentication", "Shared business permissions", "Mobile entitlement controls"],
+      "Backend Integration": ["FastAPI", "PostgreSQL"],
+      Development: ["Component-based architecture", "Automated testing", "Responsive mobile layouts"],
+    },
   },
   {
     id: "inventory-platform",
@@ -181,10 +252,10 @@ export const softwareProjects = [
     status: "Prototype",
     categoryLabel: "DESKTOP SOFTWARE",
     description:
-      "Custom-built business software tailored for operational workflows, inventory management, reporting and day-to-day business processes.",
+      "Custom operational software built around a business's own inventory, records, reporting and day-to-day workflows.",
     impact:
-      "Simplifies inventory tracking and reporting for small to medium businesses.",
-    technologies: ["Python", "SQLite", "Desktop"],
+      "Tailors operational software around a business's own processes, improving control, visibility and consistency.",
+    technologies: ["React", "TypeScript", "FastAPI", "Python", "PostgreSQL"],
     category: "software",
     folder: "DP Jewels",
     images: [
@@ -196,5 +267,31 @@ export const softwareProjects = [
       "party-ledger.png",
       "trading.png",
     ],
+    whatIBuilt:
+      "I built a custom business management platform for businesses that cannot fit their processes into generic inventory or ERP software. The system is structured around the company's own products, records, inventory movements, customers, suppliers, reports and operational workflows.",
+    whyIBuiltIt:
+      "Many businesses adapt their real processes to rigid software, creating unnecessary steps and confusion. This project demonstrates how I design software around the way a business already works, while improving control, visibility and consistency.",
+    includes: [
+      "Custom inventory workflows",
+      "Product and stock records",
+      "Customer and supplier management",
+      "Purchase and sales operations",
+      "Business reports",
+      "User permissions",
+      "Search and filtering",
+      "Operational dashboards",
+      "Configurable business data",
+      "Workflow-specific interfaces",
+      "Data import and export",
+      "Scalable API and database foundation",
+    ],
+    howIBuiltIt:
+      "I handled the product structure, workflow design, frontend implementation, backend APIs, database modelling and system integration. The architecture is intended to be adapted for different business requirements without rebuilding the entire foundation.",
+    techStack: {
+      Frontend: ["React", "TypeScript", "Vite"],
+      Backend: ["FastAPI", "Python", "SQLAlchemy"],
+      Database: ["PostgreSQL", "Alembic migrations"],
+      Architecture: ["REST APIs", "Role-based permissions", "Modular business workflows", "Reusable component architecture"],
+    },
   },
 ];
