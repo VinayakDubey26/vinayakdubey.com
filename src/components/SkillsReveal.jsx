@@ -44,9 +44,8 @@ const SkillsReveal = () => {
 
         ScrollTrigger.create({
           trigger: sectionRef.current,
-          pin: true,
-          start: "top top",
-          end: "+=3400",
+          start: "top 80%",
+          end: "bottom 20%",
           scrub: true,
           onUpdate: (self) => {
             const progress = clamp(self.progress, 0, 1);
@@ -88,7 +87,7 @@ const SkillsReveal = () => {
   const showCursor = animationReady && displayedIntro.length < fullIntro.length;
 
   return (
-    <section ref={sectionRef} className="skills-reveal -mt-[28vh] min-h-svh text-[#f5f5f7]" style={{ backgroundColor: sceneBg }} aria-label="Skills Reveal">
+    <section ref={sectionRef} id="about" className="skills-reveal min-h-svh text-[#f5f5f7]" style={{ backgroundColor: sceneBg, scrollMarginTop: 0 }} aria-label="Skills Reveal">
       <div className="skills-pin relative flex min-h-svh items-center justify-center overflow-hidden">
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[clamp(32px,8vw,120px)] w-[clamp(32px,8vw,120px)] rounded-full bg-[#050505]"

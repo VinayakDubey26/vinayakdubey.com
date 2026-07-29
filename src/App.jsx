@@ -42,9 +42,7 @@ function App() {
     <ScrollProvider value={lenisRef}>
       <main>
         <IntroHero />
-        <div id="about">
-          <SkillsReveal />
-        </div>
+        <SkillsReveal />
         <div id="projects">
           <SelectedWork />
         </div>
