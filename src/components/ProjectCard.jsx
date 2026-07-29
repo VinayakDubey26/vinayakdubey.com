@@ -19,8 +19,8 @@ const ProjectCard = ({ project, onViewDetails }) => {
     <article
       role="button"
       tabIndex={0}
-      onClick={handleCardClick}
-      onKeyDown={(e) => e.key === "Enter" && handleCardClick()}
+      onClick={handleViewDetails}
+      onKeyDown={(e) => e.key === "Enter" && handleViewDetails(e)}
       className="group relative w-[300px] h-[225px] md:w-[360px] md:h-[270px] lg:w-[440px] lg:h-[330px] shrink-0 rounded-2xl overflow-hidden bg-neutral-900 cursor-pointer"
     >
       {/* Background screenshot */}
