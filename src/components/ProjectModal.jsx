@@ -178,17 +178,20 @@ const ProjectModal = ({ project, onClose }) => {
               ))}
             </div>
 
-            {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-1.5 rounded-lg bg-white/10 px-5 py-2.5 text-sm font-medium transition hover:bg-white/16 active:scale-[0.97]"
-                style={{ touchAction: "manipulation" }}
-              >
-                Visit Website ↗
-              </a>
-            )}
+            <a
+              href={project.liveUrl || "#"}
+              target={project.liveUrl ? "_blank" : undefined}
+              rel={project.liveUrl ? "noopener noreferrer" : undefined}
+              className={`mt-8 inline-flex items-center gap-1.5 rounded-lg px-5 py-2.5 text-sm font-medium transition active:scale-[0.97] ${
+                project.liveUrl
+                  ? "bg-white/10 hover:bg-white/16"
+                  : "bg-white/5 text-white/30 cursor-not-allowed"
+              }`}
+              style={{ touchAction: "manipulation" }}
+              onClick={project.liveUrl ? undefined : (e) => e.preventDefault()}
+            >
+              Visit Website ↗
+            </a>
           </div>
         </div>
       </div>
