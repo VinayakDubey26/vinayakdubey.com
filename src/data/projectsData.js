@@ -43,7 +43,7 @@ export const websiteProjects = [
     id: "carat-software",
     title: "Carat Business Website",
     status: "Live",
-    liveUrl: "https://carat-software.netlify.app/",
+    liveUrl: "https://caratbusiness.in/",
     categoryLabel: "BUSINESS WEBSITE",
     description:
       "The official product website for Carat Business OS, designed to showcase the platform through premium storytelling, responsive design and modern interactions.",
