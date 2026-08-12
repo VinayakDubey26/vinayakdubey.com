@@ -131,7 +131,7 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
         <div ref={buttonsRef} className="flex gap-2 pointer-events-auto">
           {isLive && (
             <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
-              onClick={handleVisit}
+              onClick={(e) => { e.stopPropagation(); handleVisit(e); }}
               className="text-[11px] font-medium px-3.5 py-1.5 rounded-lg transition-colors"
               style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}>
               Visit Website ↗

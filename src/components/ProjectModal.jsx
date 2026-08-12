@@ -95,6 +95,8 @@ const ProjectModal = ({ project, onClose }) => {
   const indexRef = useRef(0);
   const transitioning = useRef(false);
   const dragState = useRef({ isDown: false, startX: 0, moved: false });
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const lightboxRef = useRef(null);
 
   const headerRef = useRef(null);
   const overviewRef = useRef(null);
@@ -106,6 +108,23 @@ const ProjectModal = ({ project, onClose }) => {
   useEffect(() => {
     indexRef.current = index;
   }, [index]);
+
+  useEffect(() => {
+    lightboxRef.current = lightboxIndex;
+  }, [lightboxIndex]);
+
+  const closeLightbox = useCallback(() => {
+    if (lightboxRef.current !== null && lightboxRef.current !== indexRef.current) {
+      setIndex(lightboxRef.current);
+    }
+    setLightboxIndex(null);
+  }, []);
+
+  const openLightbox = (i) => {
+    if (i == null) return;
+    if (isVideoFile(images[i])) return;
+    setLightboxIndex(i);
+  };
 
   useEffect(() => {
     if (total === 0) return;
@@ -266,13 +285,25 @@ const ProjectModal = ({ project, onClose }) => {
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (lightboxRef.current !== null) {
+          closeLightbox();
+        } else {
+          onClose();
+        }
+        return;
+      }
+      if (lightboxRef.current !== null) {
+        if (e.key === "ArrowRight") setLightboxIndex((i) => (i + 1) % total);
+        if (e.key === "ArrowLeft") setLightboxIndex((i) => (i - 1 + total) % total);
+        return;
+      }
       if (e.key === "ArrowRight") goNext();
       if (e.key === "ArrowLeft") goPrev();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose, goNext, goPrev]);
+  }, [onClose, goNext, goPrev, closeLightbox, total]);
 
   const handlePointerDown = (e) => {
     dragState.current.isDown = true;
@@ -371,7 +402,12 @@ const ProjectModal = ({ project, onClose }) => {
           <div className="relative w-full flex-1 flex items-center justify-center overflow-hidden select-none rounded-xl"
             style={{ minHeight: 0, background: "#0B0B0B" }}
             onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp} onPointerLeave={() => { dragState.current.isDown = false; }}>
+            onPointerUp={handlePointerUp} onPointerLeave={() => { dragState.current.isDown = false; }}
+            onClick={(e) => {
+              if (dragState.current.moved || e.target.closest("button")) return;
+              openLightbox(index);
+            }}
+            title="Tap to view fullscreen">
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: `radial-gradient(500px circle at 50% 50%, rgba(${accentRgb}, 0.07), transparent 70%)` }} />
             {total > 0 ? images.map((file, i) => {
@@ -639,6 +675,11 @@ const ProjectModal = ({ project, onClose }) => {
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerLeave={() => { dragState.current.isDown = false; }}
+          onClick={(e) => {
+            if (dragState.current.moved || e.target.closest("button")) return;
+            openLightbox(index);
+          }}
+          title="Tap to view fullscreen"
         >
           {total > 0 ? (
             <div
@@ -1196,6 +1237,64 @@ const ProjectModal = ({ project, onClose }) => {
           </>
         )}
       </div>
+
+      {/* Fullscreen image viewer (tap image to open) */}
+      {lightboxIndex !== null && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center"
+          style={{ background: "rgba(4,4,4,0.97)", touchAction: "auto" }}
+          onClick={closeLightbox}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.title} image fullscreen view`}
+        >
+          <button
+            onClick={closeLightbox}
+            aria-label="Close fullscreen view"
+            className="absolute top-0 right-0 z-10 flex items-center justify-center text-white/70 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            style={{ width: "52px", height: "52px", background: "transparent", border: "none", fontSize: "28px", touchAction: "manipulation", paddingTop: "env(safe-area-inset-top, 8px)" }}
+          >
+            ×
+          </button>
+
+          <img
+            src={getProjectImage(project.folder, images[lightboxIndex])}
+            alt={`${project.title} screenshot ${lightboxIndex + 1} fullscreen`}
+            className="max-w-full max-h-full w-auto h-auto object-contain select-none"
+            draggable={false}
+            style={{ touchAction: "auto", maxWidth: "calc(100vw - 16px)", maxHeight: "calc(100svh - 88px)" }}
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {total > 1 && (
+            <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-3 z-10"
+              style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+              onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => setLightboxIndex((i) => (i - 1 + total) % total)}
+                aria-label="Previous image in fullscreen"
+                className="rounded-full w-10 h-10 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 border active:scale-[0.9]"
+                style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.12)", touchAction: "manipulation" }}
+              >
+                ←
+              </button>
+              <span className="text-xs tabular-nums text-white/50 select-none px-2">
+                {lightboxIndex + 1} / {total}
+              </span>
+              <button
+                onClick={() => setLightboxIndex((i) => (i + 1) % total)}
+                aria-label="Next image in fullscreen"
+                className="rounded-full w-10 h-10 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 border active:scale-[0.9]"
+                style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)", borderColor: "rgba(255,255,255,0.12)", touchAction: "manipulation" }}
+              >
+                →
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
