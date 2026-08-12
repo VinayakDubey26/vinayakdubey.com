@@ -22,21 +22,22 @@ const smoothstep = (t) => {
 };
 const bgFromProgress = (t) => `rgb(${mix(245, 5, t)} ${mix(245, 5, t)} ${mix(240, 5, t)})`;
 
-// The section fades from the hero's light tone to black while its top edge
-// travels from the bottom of the viewport to the top ("top bottom" ->
-// "top top"). That window is exactly one viewport tall on every device, so
-// the reveal plays identically on desktop and mobile no matter how tall the
-// section's content makes it. Background, drop circle, typing and skill
-// groups are all keyed to the same progress so they stay aligned.
+// All reveals are anchored to the content itself, not the section's top
+// edge, so every text block appears as soon as its own part is scrolled into
+// view on desktop and mobile alike:
+//  - The background darkens and the intro types while the paragraph's top
+//    travels from the bottom of the viewport to mid-screen (one consistent
+//    window per device).
+//  - Each skill group unhides when its own card first enters the screen.
 const FADE_IN_END = 1;
-const DROP_END = 0.5;
-const TEXT_START = 0.5;
-const TEXT_RANGE = 0.42;
-const SKILLS_START = 0.74;
-const SKILLS_RANGE = 0.26;
+const DROP_END = 0.55;
+const TYPING_PARA = "top bottom";
+const TYPING_END = "top 50%";
+const SKILL_ENTER = "top 92%";
 
 const SkillsReveal = () => {
   const sectionRef = useRef(null);
+  const introRef = useRef(null);
 
   // Safe defaults: static final state unless animation initializes.
   const [animationReady, setAnimationReady] = useState(false);
@@ -60,15 +61,15 @@ const SkillsReveal = () => {
         setDropScale(0);
 
         ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "top top",
+          trigger: introRef.current,
+          start: TYPING_PARA,
+          end: TYPING_END,
           scrub: true,
           onUpdate: (self) => {
             const progress = clamp(self.progress, 0, 1);
 
-            // Background crossfades from light to black, reaching full black
-            // exactly when the section covers the screen.
+            // Background reaches full black as the intro paragraph settles
+            // mid-screen, so the text is always readable where it appears.
             const dim = smoothstep(progress / FADE_IN_END);
             const dropT = clamp(progress / DROP_END, 0, 1);
             const easedDrop = dropT < 0.5
@@ -78,21 +79,20 @@ const SkillsReveal = () => {
             setSceneBg(bgFromProgress(dim));
             setDropScale(easedDrop * 48);
 
-            // Content only appears once the background is sufficiently dark.
-            if (progress < TEXT_START) {
-              setDisplayedIntro("");
-              setVisibleGroups(0);
-              return;
-            }
-
-            const typingProgress = clamp((progress - TEXT_START) / TEXT_RANGE, 0, 1);
-            const visibleChars = Math.floor(typingProgress * fullIntro.length);
+            // Type as much as has scrolled into view.
+            const visibleChars = Math.floor(progress * fullIntro.length);
             setDisplayedIntro(fullIntro.slice(0, visibleChars));
-
-            const skillProgress = clamp((progress - SKILLS_START) / SKILLS_RANGE, 0, 1);
-            const groups = Math.ceil(skillProgress * skillGroups.length);
-            setVisibleGroups(Math.min(skillGroups.length, Math.max(0, groups)));
           },
+        });
+
+        // Reveal each skill group as its own card enters the viewport.
+        const cells = sectionRef.current.querySelectorAll(".skill-cell");
+        cells.forEach((cell, i) => {
+          ScrollTrigger.create({
+            trigger: cell,
+            start: SKILL_ENTER,
+            onEnter: () => setVisibleGroups(Math.min(skillGroups.length, i + 1)),
+          });
         });
       });
 
@@ -115,7 +115,7 @@ const SkillsReveal = () => {
           aria-hidden="true"
         />
         <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
-          <p className="mb-[clamp(20px,4vh,48px)] whitespace-pre-wrap text-[clamp(1.25rem,2.6vw,3rem)] font-medium leading-[1.15] tracking-[-0.02em]">
+          <p ref={introRef} className="mb-[clamp(20px,4vh,48px)] whitespace-pre-wrap text-[clamp(1.25rem,2.6vw,3rem)] font-medium leading-[1.15] tracking-[-0.02em]">
             {displayedIntro}
             {showCursor && <span className="type-cursor">|</span>}
           </p>
@@ -126,7 +126,7 @@ const SkillsReveal = () => {
               return (
                 <article
                   key={group.title}
-                  className="transition-[opacity,filter,transform] duration-500 ease-out"
+                  className="skill-cell transition-[opacity,filter,transform] duration-500 ease-out"
                   style={{
                     opacity: isVisible ? 1 : 0,
                     filter: isVisible ? "blur(0px)" : "blur(10px)",
