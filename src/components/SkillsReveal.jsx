@@ -22,16 +22,18 @@ const smoothstep = (t) => {
 };
 const bgFromProgress = (t) => `rgb(${mix(245, 5, t)} ${mix(245, 5, t)} ${mix(240, 5, t)})`;
 
-// The section fades from the hero's light tone to black while it slides into
-// the viewport. Progress 0 -> 0.5 maps to the section's top traveling from
-// 80% down the viewport to the very top, so the darkening stays in sync with
-// its entry instead of snapping black instantly.
-const FADE_IN_END = 0.5;
-const DROP_END = 0.45;
-const TEXT_START = 0.34;
-const TEXT_RANGE = 0.32;
-const SKILLS_START = 0.55;
-const SKILLS_RANGE = 0.3;
+// The section fades from the hero's light tone to black while its top edge
+// travels from the bottom of the viewport to the top ("top bottom" ->
+// "top top"). That window is exactly one viewport tall on every device, so
+// the reveal plays identically on desktop and mobile no matter how tall the
+// section's content makes it. Background, drop circle, typing and skill
+// groups are all keyed to the same progress so they stay aligned.
+const FADE_IN_END = 1;
+const DROP_END = 0.5;
+const TEXT_START = 0.5;
+const TEXT_RANGE = 0.42;
+const SKILLS_START = 0.74;
+const SKILLS_RANGE = 0.26;
 
 const SkillsReveal = () => {
   const sectionRef = useRef(null);
@@ -59,14 +61,14 @@ const SkillsReveal = () => {
 
         ScrollTrigger.create({
           trigger: sectionRef.current,
-          start: "top 80%",
-          end: "bottom 20%",
+          start: "top bottom",
+          end: "top top",
           scrub: true,
           onUpdate: (self) => {
             const progress = clamp(self.progress, 0, 1);
 
-            // Background crossfades from light to black in sync with the
-            // section entering the viewport.
+            // Background crossfades from light to black, reaching full black
+            // exactly when the section covers the screen.
             const dim = smoothstep(progress / FADE_IN_END);
             const dropT = clamp(progress / DROP_END, 0, 1);
             const easedDrop = dropT < 0.5
