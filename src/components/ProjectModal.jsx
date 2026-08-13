@@ -395,11 +395,13 @@ const ProjectModal = ({ project, onClose }) => {
         @media (max-width: 767px) {
           .mobile-split-grid { display: block; padding: 0 12px; }
           .split-media-col { position: static !important; height: auto !important; padding-top: 16px; }
+          .split-media-stage { height: min(62svh, 460px) !important; flex: none !important; flex-shrink: 0 !important; }
+          .split-media-stage img, .split-media-stage video { max-height: calc(min(62svh, 460px) - 16px) !important; }
         }
       `}</style>
       <div className="mobile-split-grid">
         <div className="split-media-col">
-          <div className="relative w-full flex-1 flex items-center justify-center overflow-hidden select-none rounded-xl"
+          <div className="split-media-stage relative w-full flex-1 flex items-center justify-center overflow-hidden select-none rounded-xl"
             style={{ minHeight: 0, background: "#0B0B0B" }}
             onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp} onPointerLeave={() => { dragState.current.isDown = false; }}
