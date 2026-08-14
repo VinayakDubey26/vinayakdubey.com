@@ -1,5 +1,6 @@
 ﻿import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import ResumeLink from "./ResumeLink";
 
 const GREETINGS = [
   "Hello",
@@ -242,7 +243,7 @@ const IntroHero = () => {
 
         {visibleLinks.length > 0 && (
           <div
-            className="hero-social-row flex items-center justify-start md:justify-end gap-[10px] md:gap-[14px] mt-7 w-full overflow-visible flex-nowrap md:pr-[clamp(12px,4vw,64px)]"
+            className="hero-social-row flex items-center justify-start md:justify-end gap-[10px] md:gap-[14px] mt-7 w-full overflow-visible flex-wrap md:flex-nowrap md:pr-[clamp(12px,4vw,64px)]"
             style={{ minHeight: "58px" }}
           >
             {visibleLinks.map((s) => {
@@ -267,6 +268,8 @@ const IntroHero = () => {
                 </Tag>
               );
             })}
+
+            <span className="hero-cta"><ResumeLink /></span>
           </div>
         )}
 

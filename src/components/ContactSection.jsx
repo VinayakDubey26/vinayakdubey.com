@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ResumeLink from "./ResumeLink";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -109,6 +110,7 @@ const ContactSection = () => {
             </p>
 
             <div data-contact-reveal className="mt-10 space-y-3">
+              <ResumeLink layout="row" />
               {DIRECT_LINKS.map((link) => (
                 <a
                   key={link.name}
