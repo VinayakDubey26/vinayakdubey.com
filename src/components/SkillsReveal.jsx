@@ -107,7 +107,7 @@ const SkillsReveal = () => {
   const showCursor = animationReady && displayedIntro.length < fullIntro.length;
 
   return (
-    <section ref={sectionRef} id="about" className="skills-reveal min-h-svh text-[#f5f5f7]" style={{ backgroundColor: sceneBg, scrollMarginTop: 0 }} aria-label="Skills Reveal">
+    <section ref={sectionRef} id="about" className="skills-reveal relative min-h-svh overflow-hidden text-[#f5f5f7]" style={{ backgroundColor: sceneBg, scrollMarginTop: 0 }} aria-label="Skills Reveal">
       <div className="skills-pin relative flex min-h-svh items-center justify-center overflow-hidden">
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[clamp(32px,8vw,120px)] w-[clamp(32px,8vw,120px)] rounded-full bg-[#050505]"
@@ -115,12 +115,19 @@ const SkillsReveal = () => {
           aria-hidden="true"
         />
         <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
-          <p ref={introRef} className="mb-[clamp(20px,4vh,48px)] whitespace-pre-wrap text-[clamp(1.25rem,2.6vw,3rem)] font-medium leading-[1.15] tracking-[-0.02em]">
+          <div className="mb-4 flex items-center justify-start md:mb-6">
+            <span className="skill-pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.16em] text-[#f5f5f0]/90 backdrop-blur-sm md:text-[0.68rem]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#d8d8d2] shadow-[0_0_12px_rgba(216,216,210,0.9)]" aria-hidden="true" />
+              What I build
+            </span>
+          </div>
+
+          <p ref={introRef} className="intro-copy mb-[clamp(20px,4vh,48px)] max-w-[980px] whitespace-pre-wrap text-[clamp(1.5rem,5vw,3.6rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#f8f8f4]">
             {displayedIntro}
             {showCursor && <span className="type-cursor">|</span>}
           </p>
 
-          <div className="grid grid-cols-1 gap-x-[42px] gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[42px] md:gap-y-6 md:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((group, idx) => {
               const isVisible = !animationReady || idx < visibleGroups;
               return (
@@ -132,10 +139,11 @@ const SkillsReveal = () => {
                     filter: isVisible ? "blur(0px)" : "blur(10px)",
                     transform: isVisible ? "translateY(0px)" : "translateY(12px)",
                     pointerEvents: isVisible ? "auto" : "none",
+                    animationDelay: `${idx * 100}ms`,
                   }}
                 >
-                  <h3 className="mb-2 text-[clamp(0.95rem,1.1vw,1.15rem)] font-semibold tracking-[0.04em] text-[#f8f8f4]">{group.title}</h3>
-                  <p className="text-[clamp(0.82rem,0.95vw,1rem)] leading-[1.45] text-[#ecece8]">{group.text}</p>
+                  <h3 className="mb-2 text-[clamp(0.94rem,1.1vw,1.15rem)] font-semibold tracking-[0.06em] text-[#f8f8f4]">{group.title}</h3>
+                  <p className="text-[clamp(0.82rem,0.93vw,1rem)] leading-[1.55] text-[#e7e7e1]">{group.text}</p>
                 </article>
               );
             })}
