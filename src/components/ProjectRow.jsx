@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectCard from "./ProjectCard";
+import Reveal from "./Reveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -141,12 +142,15 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
 
   return (
     <div className="mb-14 md:mb-20" ref={rowRef}>
-      <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40 mb-5 px-6 md:px-10">
-        {title}
-      </h3>
+      <Reveal amount={0.4} y={16}>
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-white/40 mb-5 px-6 md:px-10">
+          {title}
+        </h3>
+      </Reveal>
 
       <div
         ref={scrollRef}
+        data-lenis-prevent
         className="flex gap-4 md:gap-5 overflow-x-auto px-6 md:px-10 pb-2 select-none scroll-row"
         style={{
           scrollbarWidth: "none",

@@ -17,8 +17,13 @@ function App() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
-      lerp: 0.08,
+      lerp: 0.09,
+      wheelMultiplier: 1,
+      touchMultiplier: 1.6,
       smoothWheel: true,
+      syncTouch: false,
+      anchors: true,
+      autoRaf: false,
     });
 
     lenisRef.current = lenis;
@@ -32,7 +37,11 @@ function App() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener("load", refresh);
+
     return () => {
+      window.removeEventListener("load", refresh);
       gsap.ticker.remove(tick);
       lenis.destroy();
       lenisRef.current = null;

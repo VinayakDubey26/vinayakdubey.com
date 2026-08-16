@@ -1,6 +1,10 @@
 ﻿import { useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ResumeLink from "./ResumeLink";
+import { useLenisRef } from "../context/ScrollContext";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const GREETINGS = [
   "Hello",
@@ -68,12 +72,17 @@ const IntroHero = () => {
   const cueRef = useRef(null);
   const chevronRef = useRef(null);
   const circleRef = useRef(null);
+  const heroNameRef = useRef(null);
+  const heroSectionRef = useRef(null);
+  const lenisRef = useLenisRef();
 
   useEffect(() => {
     const mm = window.matchMedia("(prefers-reduced-motion: reduce)");
     const greetingEl = greetingTextRef.current;
     const greetingContainer = greetingRef.current;
     const finalContent = finalRef.current;
+    const heroName = heroNameRef.current;
+    const cue = cueRef.current;
 
     if (!greetingEl || !greetingContainer || !finalContent) return;
 
@@ -93,6 +102,14 @@ const IntroHero = () => {
     });
 
     tlRef.current = tl;
+
+    const socialEls = finalContent.querySelectorAll(".hero-social-row > *");
+    const hintEl = finalContent.querySelector(".hero-scroll-hint");
+
+    gsap.set([heroName, socialEls, hintEl, cue], {
+      autoAlpha: 0,
+      y: 28,
+    });
 
     greetingEl.textContent = GREETINGS[0];
 
@@ -151,6 +168,31 @@ const IntroHero = () => {
         duration: 0.55,
         ease: "power3.out",
       })
+      .to(heroName, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+      }, "-=0.35")
+      .to(socialEls, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.5,
+        stagger: 0.07,
+        ease: "power3.out",
+      }, "-=0.4")
+      .to(hintEl, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power3.out",
+      }, "-=0.35")
+      .to(cue, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.4,
+        ease: "power3.out",
+      }, "-=0.3")
       .to(greetingContainer, {
         autoAlpha: 0,
         duration: 0.2,
@@ -201,19 +243,45 @@ const IntroHero = () => {
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    const mm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const section = heroSectionRef.current;
+    const name = heroNameRef.current;
+
+    if (!section || !name || mm.matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to(name, {
+        yPercent: 16,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   const handleScrollDown = () => {
+    const lenis = lenisRef?.current;
+    if (lenis) {
+      lenis.scrollTo("#about", { offset: 0, duration: 1.6 });
+      return;
+    }
     const target = document.getElementById("about");
     if (!target) return;
-    window.scrollTo({
-      top: target.offsetTop,
-      behavior: "auto",
-    });
+    target.scrollIntoView({ behavior: "smooth" });
   };
 
   const visibleLinks = SOCIAL_LINKS.filter((s) => !s.hidden);
 
   return (
     <section
+      ref={heroSectionRef}
       className="hero relative bg-[#f5f5f0]"
       style={{
         minHeight: "100svh",
@@ -237,7 +305,10 @@ const IntroHero = () => {
           FULL-STACK DEVELOPER &amp; SOFTWARE ENGINEER
         </span>
 
-        <h1 className="hero-name font-hero-display text-[clamp(2.4rem,10vw,10rem)] font-semibold leading-[0.92] tracking-[-0.04em] text-[#111111]">
+        <h1
+          ref={heroNameRef}
+          className="hero-name font-hero-display text-[clamp(2.4rem,10vw,10rem)] font-semibold leading-[0.92] tracking-[-0.04em] text-[#111111]"
+        >
           I am Vinayak<br />Dubey
         </h1>
 
@@ -273,7 +344,7 @@ const IntroHero = () => {
           </div>
         )}
 
-        <p className="mt-7 text-[clamp(0.65rem,0.75vw,0.8rem)] font-medium tracking-[0.12em] text-[#8b8b85]">
+        <p className="hero-scroll-hint mt-7 text-[clamp(0.65rem,0.75vw,0.8rem)] font-medium tracking-[0.12em] text-[#8b8b85]">
           Scroll to explore
         </p>
       </div>
