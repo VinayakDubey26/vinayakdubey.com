@@ -1,17 +1,18 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SKILL_ICONS } from "../data/skillIcons";
 
-const fullIntro = `I am a Full-Stack Developer & Software Engineer.\n\nI build business software, ecommerce websites, AI-powered tools, and operational systems.`;
+const fullIntro = `I build software for businesses — ecommerce, AI tools, and operational systems.`;
 
 const skillGroups = [
-  { title: "Frontend", text: "React • JavaScript • HTML • CSS • GSAP • Responsive Design" },
-  { title: "Backend", text: "Node.js • Express.js • REST APIs • JWT • OAuth" },
-  { title: "Databases", text: "SQLite • PostgreSQL • MySQL • MongoDB • Database Design" },
-  { title: "Cloud & Infrastructure", text: "AWS • EC2 • S3 • RDS • Deployment • Security" },
-  { title: "AI Engineering", text: "GPT • Claude • Gemini • RAG • MCP • AI Agents • Embeddings" },
-  { title: "Automation", text: "n8n • Zapier • WhatsApp APIs • Email APIs" },
-  { title: "Architecture", text: "System Design • Cloud Architecture • AI Architecture • Database Architecture" },
+  { title: "Frontend", skills: ["React", "JavaScript", "HTML", "CSS", "GSAP", "Responsive Design"] },
+  { title: "Backend", skills: ["Node.js", "Express.js", "REST APIs", "JWT", "OAuth"] },
+  { title: "Databases", skills: ["SQLite", "PostgreSQL", "MySQL", "MongoDB", "Database Design"] },
+  { title: "Cloud & Infrastructure", skills: ["AWS", "EC2", "S3", "RDS", "Deployment", "Security"] },
+  { title: "AI Engineering", skills: ["GPT", "Claude", "Gemini", "RAG", "MCP", "AI Agents", "Embeddings"] },
+  { title: "Automation", skills: ["n8n", "Zapier", "WhatsApp APIs", "Email APIs"] },
+  { title: "Architecture", skills: ["System Design", "Cloud Architecture", "AI Architecture", "Database Architecture"] },
 ];
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
@@ -127,24 +128,41 @@ const SkillsReveal = () => {
             {showCursor && <span className="type-cursor">|</span>}
           </p>
 
-          <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[42px] md:gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-[42px] gap-y-5 md:grid-cols-2 lg:grid-cols-3 md:gap-y-7">
             {skillGroups.map((group, idx) => {
               const isVisible = !animationReady || idx < visibleGroups;
               return (
-                <article
+                <div
                   key={group.title}
-                  className="skill-cell transition-[opacity,filter,transform] duration-500 ease-out"
+                  className="skill-cell border-b border-white/10 pb-5 md:pb-6"
                   style={{
                     opacity: isVisible ? 1 : 0,
-                    filter: isVisible ? "blur(0px)" : "blur(10px)",
+                    filter: isVisible ? "blur(0px)" : "blur(8px)",
                     transform: isVisible ? "translateY(0px)" : "translateY(12px)",
+                    transition: "opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease",
                     pointerEvents: isVisible ? "auto" : "none",
-                    animationDelay: `${idx * 100}ms`,
                   }}
                 >
                   <h3 className="mb-2 text-[clamp(0.94rem,1.1vw,1.15rem)] font-semibold tracking-[0.06em] text-[#f8f8f4]">{group.title}</h3>
-                  <p className="text-[clamp(0.82rem,0.93vw,1rem)] leading-[1.55] text-[#e7e7e1]">{group.text}</p>
-                </article>
+                  <div className="flex flex-wrap gap-x-4 gap-y-2">
+                    {group.skills.map((skill) => {
+                      const icon = SKILL_ICONS[skill];
+                      return (
+                        <span
+                          key={skill}
+                          className="inline-flex items-center gap-1.5 text-[clamp(0.82rem,0.93vw,1rem)] leading-[1.55] text-[#e7e7e1]"
+                        >
+                          {icon && (
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill={icon.color} aria-hidden="true">
+                              <path d={icon.path} />
+                            </svg>
+                          )}
+                          {skill}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
               );
             })}
           </div>

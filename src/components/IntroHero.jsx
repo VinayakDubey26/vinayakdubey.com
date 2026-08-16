@@ -6,18 +6,7 @@ import { useLenisRef } from "../context/ScrollContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const GREETINGS = [
-  "Hello",
-  "नमस्ते",
-  "Bonjour",
-  "Hola",
-  "Ciao",
-  "Hallo",
-  "Olá",
-  "こんにちは",
-  "안녕하세요",
-  "مرحبا",
-];
+const GREETINGS = ["Hello", "नमस्ते", "Bonjour"];
 
 const SOCIAL_LINKS = [
   {
