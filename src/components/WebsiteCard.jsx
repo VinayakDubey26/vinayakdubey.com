@@ -33,6 +33,15 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mq.matches) return () => ctx.revert();
 
+    // Touch devices have no hover, so reveal the description and tech
+    // chips permanently and drop the hover-only action buttons (tapping
+    // the card opens the details anyway).
+    if (window.matchMedia("(hover: none)").matches) {
+      gsap.set([descRef.current, techRef.current], { opacity: 1 });
+      if (buttonsRef.current) gsap.set(buttonsRef.current, { display: "none" });
+      return () => ctx.revert();
+    }
+
     const onEnter = () => {
       gsap.to(bgRef.current, { scale: 1.06, duration: 0.45, ease: "power2.out" });
       gsap.to(darkRef.current, { opacity: 1, duration: 0.45, ease: "power2.out" });
@@ -89,7 +98,7 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
         style={{ backgroundImage: `url(${hero})` }} />
 
       <div className="absolute inset-0 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.3) 35%, transparent 55%)" }} />
+        style={{ background: "linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.45) 32%, rgba(5,5,5,0.12) 55%, transparent 75%)" }} />
 
       <div ref={darkRef} className="absolute inset-0 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to top, rgba(0,0,0,0.35), transparent 45%)", opacity: 0 }} />
@@ -110,12 +119,12 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 p-5 z-20 pointer-events-none">
-        <h3 ref={titleRef} className="text-base md:text-lg font-semibold text-white mb-1">
+      <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 z-20 pointer-events-none">
+        <h3 ref={titleRef} className="text-lg md:text-xl font-semibold text-white mb-1 leading-snug">
           {project.title}
         </h3>
 
-        <p ref={descRef} className="text-xs leading-relaxed text-white/50 max-w-[90%] mb-3" style={{ opacity: 0 }}>
+        <p ref={descRef} className="text-xs leading-relaxed text-white/55 max-w-[92%] mb-2.5 line-clamp-3" style={{ opacity: 0 }}>
           {project.description}
         </p>
 

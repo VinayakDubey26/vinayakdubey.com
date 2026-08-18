@@ -19,25 +19,45 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     const cards = rowRef.current?.querySelectorAll(".card-item");
     if (!cards?.length || staggerDone.current) return;
 
+    // Reduced motion: never hide cards, show them immediately.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      staggerDone.current = true;
+      return;
+    }
+
     gsap.set(cards, { y: 40, opacity: 0 });
+
+    let fallbackTimer = null;
+
+    const reveal = () => {
+      if (staggerDone.current) return;
+      staggerDone.current = true;
+      gsap.to(cards, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power3.out",
+      });
+    };
 
     const st = ScrollTrigger.create({
       trigger: rowRef.current,
       start: "top 82%",
       once: true,
-      onEnter: () => {
-        staggerDone.current = true;
-        gsap.to(cards, {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power3.out",
-        });
-      },
+      onEnter: reveal,
     });
 
-    return () => st.kill();
+    // Safety net: if the trigger never fires (throttled RAF, delayed
+    // layout, Lenis edge cases on mobile), show the cards anyway.
+    fallbackTimer = window.setTimeout(() => {
+      if (!staggerDone.current && ScrollTrigger.isInViewport(rowRef.current)) reveal();
+    }, 1200);
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      st.kill();
+    };
   }, []);
 
   // Row parallax on scroll
