@@ -92,6 +92,17 @@ const IntroHero = () => {
 
     tlRef.current = tl;
 
+    // Safety net: never let the intro overlay block the hero name. If the
+    // timeline is ever interrupted (throttled RAF, backgrounded tab, low
+    // power mode), the overlay is hidden on a timer and on first scroll.
+    const hideOverlay = () => {
+      gsap.set(greetingContainer, { autoAlpha: 0, visibility: "hidden", pointerEvents: "none" });
+    };
+    const fallbackTimer = window.setTimeout(hideOverlay, 6000);
+    const dismissOnScroll = () => hideOverlay();
+    window.addEventListener("wheel", dismissOnScroll, { passive: true, once: true });
+    window.addEventListener("touchstart", dismissOnScroll, { passive: true, once: true });
+
     const socialEls = finalContent.querySelectorAll(".hero-social-row > *");
     const hintEl = finalContent.querySelector(".hero-scroll-hint");
 
@@ -189,6 +200,9 @@ const IntroHero = () => {
       }, "+=0.35");
 
     return () => {
+      window.clearTimeout(fallbackTimer);
+      window.removeEventListener("wheel", dismissOnScroll);
+      window.removeEventListener("touchstart", dismissOnScroll);
       if (tlRef.current) {
         tlRef.current.kill();
         tlRef.current = null;
