@@ -89,8 +89,21 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     if (!el) return;
 
     const s = dragState.current;
+    let watchdog = null;
+
+    const resetDragState = () => {
+      s.isDown = false;
+      s.moved = false;
+      s.vel = 0;
+      if (s.raf) { cancelAnimationFrame(s.raf); s.raf = null; }
+      dragRef.current = false;
+      if (el) el.style.cursor = "grab";
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
+    };
 
     const onDown = (e) => {
+      // Only left click / primary touch
+      if (e.button !== 0 && e.button !== undefined) return;
       s.isDown = true;
       s.startX = e.pageX - el.offsetLeft;
       s.scrollLeft = el.scrollLeft;
@@ -99,6 +112,8 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       if (s.raf) { cancelAnimationFrame(s.raf); s.raf = null; }
       dragRef.current = false;
       el.style.cursor = "grabbing";
+      // Watchdog: force reset if pointer gets stuck down > 3s
+      watchdog = setTimeout(resetDragState, 3000);
     };
 
     const onMove = (e) => {
@@ -108,21 +123,26 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       const walk = x - s.startX;
       if (Math.abs(walk) > 3) s.moved = true;
       el.scrollLeft = s.scrollLeft - walk;
-      s.vel = walk;
+      // Cap velocity to prevent runaway
+      s.vel = Math.max(-80, Math.min(80, walk));
       dragRef.current = s.moved;
       updateProgress();
+      // Reset watchdog on move
+      if (watchdog) { clearTimeout(watchdog); watchdog = setTimeout(resetDragState, 3000); }
     };
 
     const onUp = () => {
       if (!s.isDown) return;
       s.isDown = false;
       el.style.cursor = "grab";
+      if (watchdog) { clearTimeout(watchdog); watchdog = null; }
 
       const decay = 0.96;
-      let v = s.vel;
+      let v = Math.max(-80, Math.min(80, s.vel));
 
       const step = () => {
         if (Math.abs(v) < 0.3) { s.raf = null; return; }
+        if (!el) { s.raf = null; return; }
         el.scrollLeft -= v;
         v *= decay;
         updateProgress();
@@ -134,6 +154,11 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       }
     };
 
+    const onLeave = () => {
+      // Pointer left the element - if still down, treat as cancel
+      if (s.isDown) onUp();
+    };
+
     const onWheel = (e) => {
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         el.scrollLeft += e.deltaX;
@@ -142,21 +167,30 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       }
     };
 
-    el.addEventListener("pointerdown", onDown);
-    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerdown", onDown, { passive: false });
+    el.addEventListener("pointermove", onMove, { passive: false });
     el.addEventListener("pointerup", onUp);
     el.addEventListener("pointercancel", onUp);
+    el.addEventListener("pointerleave", onLeave);
     el.addEventListener("wheel", onWheel, { passive: false });
-    el.addEventListener("scroll", updateProgress);
+    el.addEventListener("scroll", updateProgress, { passive: true });
 
     return () => {
+      if (watchdog) clearTimeout(watchdog);
       el.removeEventListener("pointerdown", onDown);
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerup", onUp);
       el.removeEventListener("pointercancel", onUp);
+      el.removeEventListener("pointerleave", onLeave);
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", updateProgress);
       if (s.raf) cancelAnimationFrame(s.raf);
+      // Ensure clean state on unmount
+      s.isDown = false;
+      s.moved = false;
+      s.vel = 0;
+      dragRef.current = false;
+      if (el) el.style.cursor = "grab";
     };
   }, [updateProgress]);
 
