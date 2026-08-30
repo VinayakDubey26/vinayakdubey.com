@@ -50,23 +50,6 @@ function App() {
 
   return (
     <ScrollProvider value={lenisRef}>
-      <header className="fixed left-4 top-4 z-50 mix-blend-difference md:left-6 md:top-5">
-        <button
-          type="button"
-          onClick={() => {
-            const lenis = lenisRef.current;
-            if (lenis) {
-              lenis.scrollTo(0, { duration: 1.2 });
-            } else {
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            }
-          }}
-          aria-label="Back to top — vinayakdubey.com"
-          className="cursor-pointer font-hero-display text-[0.82rem] font-semibold tracking-[0.03em] text-white transition-opacity hover:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
-        >
-          vinayakdubey<span className="opacity-60">.com</span>
-        </button>
-      </header>
       <main>
         <IntroHero />
         <SkillsReveal />

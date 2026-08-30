@@ -136,6 +136,8 @@ const ContactSection = () => {
           <form
             name="contact"
             method="POST"
+            action="/"
+            acceptCharset="utf-8"
             data-netlify="true"
             netlify-honeypot="bot-field"
             onSubmit={handleSubmit}
