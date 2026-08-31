@@ -40,31 +40,8 @@ const ContactSection = () => {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    if (data.get("bot-field")) {
-      setStatus("success");
-      form.reset();
-      return;
-    }
-
+  const handleSubmit = () => {
     setStatus("submitting");
-
-    try {
-      const response = await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data).toString(),
-      });
-      if (!response.ok) throw new Error("Request failed");
-      setStatus("success");
-      form.reset();
-    } catch {
-      setStatus("error");
-    }
   };
 
   return (
@@ -136,7 +113,7 @@ const ContactSection = () => {
           <form
             name="contact"
             method="POST"
-            action="/"
+            action="https://vinayakdubey.com/"
             acceptCharset="utf-8"
             data-netlify="true"
             netlify-honeypot="bot-field"
