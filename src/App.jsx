@@ -6,6 +6,7 @@ import { ScrollProvider } from "./context/ScrollContext";
 import IntroHero from "./components/IntroHero";
 import SkillsReveal from "./components/SkillsReveal";
 import SelectedWork from "./components/SelectedWork";
+import ServicesSection from "./components/ServicesSection";
 import ContactSection from "./components/ContactSection";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -56,6 +57,7 @@ function App() {
         <div id="projects">
           <SelectedWork />
         </div>
+        <ServicesSection />
         <ContactSection />
       </main>
     </ScrollProvider>
