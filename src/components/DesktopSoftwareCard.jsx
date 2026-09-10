@@ -2,15 +2,28 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { getProjectImage } from "../data/projectsData";
 
+const statusColors = {
+  Live: { bg: "rgba(52,211,153,0.15)", color: "#34d399", border: "rgba(52,211,153,0.2)" },
+  Built: { bg: "rgba(52,211,153,0.15)", color: "#34d399", border: "rgba(52,211,153,0.2)" },
+  "In Development": { bg: "rgba(250,204,21,0.15)", color: "#facc15", border: "rgba(250,204,21,0.2)" },
+  Prototype: { bg: "rgba(96,165,250,0.15)", color: "#60a5fa", border: "rgba(96,165,250,0.2)" },
+  Concept: { bg: "rgba(192,132,252,0.15)", color: "#c084fc", border: "rgba(192,132,252,0.2)" },
+};
+
 const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
   const cardRef = useRef(null);
-  const windowRef = useRef(null);
-  const screenshotRef = useRef(null);
-  const pillsRef = useRef(null);
-  const btnRef = useRef(null);
+  const bgRef = useRef(null);
+  const darkRef = useRef(null);
+  const titleRef = useRef(null);
+  const descRef = useRef(null);
+  const techRef = useRef(null);
+  const buttonsRef = useRef(null);
+  const borderRef = useRef(null);
 
   const hero = getProjectImage(project.folder, project.images[0]);
-  const capabilities = project.includes?.slice(0, 5) || [];
+  const isLive = !!project.liveUrl;
+  const statusStyle = project.status ? statusColors[project.status] || statusColors.Concept : statusColors.Concept;
+  const statusText = isLive ? "LIVE" : project.status?.toUpperCase() || "CONCEPT";
 
   useEffect(() => {
     const card = cardRef.current;
@@ -20,20 +33,33 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     if (mq.matches) return () => ctx.revert();
 
+    // Touch devices have no hover, so reveal the description and tech
+    // chips permanently and drop the hover-only action buttons (tapping
+    // the card opens the details anyway).
+    if (window.matchMedia("(hover: none)").matches) {
+      gsap.set([descRef.current, techRef.current], { opacity: 1 });
+      if (buttonsRef.current) gsap.set(buttonsRef.current, { display: "none" });
+      return () => ctx.revert();
+    }
+
     const onEnter = () => {
-      gsap.to(windowRef.current, { y: -6, duration: 0.45, ease: "power2.out" });
-      gsap.to(screenshotRef.current, { scale: 1.03, duration: 0.45, ease: "power2.out" });
-      gsap.to(windowRef.current, { boxShadow: "0 12px 48px rgba(0,0,0,0.6)", duration: 0.45, ease: "power2.out" });
-      gsap.to(pillsRef.current, { y: -4, opacity: 1, duration: 0.45, ease: "power2.out" });
-      gsap.to(btnRef.current, { y: -6, duration: 0.45, ease: "power2.out" });
+      gsap.to(bgRef.current, { scale: 1.06, duration: 0.45, ease: "power2.out" });
+      gsap.to(darkRef.current, { opacity: 1, duration: 0.45, ease: "power2.out" });
+      gsap.to(titleRef.current, { y: -4, duration: 0.45, ease: "power2.out" });
+      gsap.to(descRef.current, { y: -6, opacity: 1, duration: 0.45, ease: "power2.out" });
+      gsap.to(techRef.current, { y: -4, opacity: 1, duration: 0.45, ease: "power2.out" });
+      gsap.to(buttonsRef.current, { y: -8, duration: 0.45, ease: "power2.out" });
+      gsap.to(borderRef.current, { opacity: 0.5, duration: 0.45, ease: "power2.out" });
     };
 
     const onLeave = () => {
-      gsap.to(windowRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
-      gsap.to(screenshotRef.current, { scale: 1, duration: 0.45, ease: "power2.out" });
-      gsap.to(windowRef.current, { boxShadow: "0 4px 20px rgba(0,0,0,0.3)", duration: 0.45, ease: "power2.out" });
-      gsap.to(pillsRef.current, { y: 0, opacity: 0, duration: 0.45, ease: "power2.out" });
-      gsap.to(btnRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(bgRef.current, { scale: 1, duration: 0.45, ease: "power2.out" });
+      gsap.to(darkRef.current, { opacity: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(titleRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(descRef.current, { y: 0, opacity: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(techRef.current, { y: 0, opacity: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(buttonsRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
+      gsap.to(borderRef.current, { opacity: 0.2, duration: 0.45, ease: "power2.out" });
     };
 
     card.addEventListener("mouseenter", onEnter);
@@ -51,6 +77,10 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
     onViewDetails(project);
   };
 
+  const handleVisit = (e) => {
+    if (dragRef.current) e.preventDefault();
+  };
+
   return (
     <article
       ref={cardRef}
@@ -58,53 +88,64 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && !dragRef.current && onViewDetails(project)}
-      className="card-item group relative shrink-0 rounded-[24px] overflow-hidden select-none cursor-grab active:cursor-grabbing w-[clamp(260px,75vw,480px)] md:w-[clamp(320px,48vw,520px)] lg:w-[clamp(420px,38vw,580px)] aspect-[4/3.5]"
-      style={{ background: "#0C0C0C", border: "1px solid rgba(255,255,255,0.05)" }}
+      className="card-item group relative shrink-0 rounded-[24px] overflow-hidden select-none cursor-grab active:cursor-grabbing w-[clamp(260px,75vw,480px)] md:w-[clamp(320px,48vw,520px)] lg:w-[clamp(420px,38vw,580px)] aspect-[4/3]"
+      style={{ background: "#0A0A0A" }}
     >
-      <div className="flex flex-col h-full p-4 md:p-5">
-        <div className="mb-3">
-          <span className="text-[10px] font-medium uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>
-            {project.categoryLabel || "Desktop Software"}
-          </span>
-          <h3 className="text-base md:text-lg font-semibold text-white mt-0.5">{project.title}</h3>
-        </div>
+      <div ref={borderRef} className="absolute inset-0 rounded-[24px] pointer-events-none z-20"
+        style={{ border: "1px solid rgba(255,255,255,0.06)", opacity: 0.2 }} />
 
-        <div className="flex flex-wrap gap-1.5 mb-3">
-          {project.technologies?.slice(0, 4).map((t) => (
+      <div ref={bgRef} className="absolute inset-0 bg-cover bg-center will-change-transform"
+        style={{ backgroundImage: `url(${hero})` }} />
+
+      <div className="absolute inset-0 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.45) 32%, rgba(5,5,5,0.12) 55%, transparent 75%)" }} />
+
+      <div ref={darkRef} className="absolute inset-0 z-10 pointer-events-none"
+        style={{ background: "linear-gradient(to top, rgba(0,0,0,0.35), transparent 45%)", opacity: 0 }} />
+
+      <div className="absolute top-3 left-3 z-20">
+        <span className="text-[10px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full"
+          style={{ background: statusStyle.bg, color: statusStyle.color, border: `1px solid ${statusStyle.border}` }}>
+          {statusText}
+        </span>
+      </div>
+
+      {project.categoryLabel && (
+        <div className="absolute top-3 right-3 z-20">
+          <span className="text-[10px] font-medium uppercase tracking-widest px-2.5 py-1 rounded-full"
+            style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            {project.categoryLabel}
+          </span>
+        </div>
+      )}
+
+      <div className="absolute inset-x-0 bottom-0 p-4 md:p-5 z-20 pointer-events-none">
+        <h3 ref={titleRef} className="text-lg md:text-xl font-semibold text-white mb-1 leading-snug">
+          {project.title}
+        </h3>
+
+        <p ref={descRef} className="text-xs leading-relaxed text-white/55 max-w-[92%] mb-2.5 line-clamp-3" style={{ opacity: 0 }}>
+          {project.description}
+        </p>
+
+        <div ref={techRef} className="flex flex-wrap gap-1.5 mb-3" style={{ opacity: 0 }}>
+          {project.technologies?.slice(0, 3).map((t) => (
             <span key={t} className="text-[10px] px-2 py-0.5 rounded-full"
-              style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)", border: "1px solid rgba(255,255,255,0.04)" }}>
+              style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.4)" }}>
               {t}
             </span>
           ))}
         </div>
 
-        <div ref={windowRef} className="flex-1 rounded-lg overflow-hidden flex flex-col"
-          style={{ border: "1px solid rgba(255,255,255,0.06)", boxShadow: "0 4px 20px rgba(0,0,0,0.3)", background: "#111", minHeight: 0, willChange: "transform" }}>
-          <div className="flex items-center gap-1.5 px-3 py-1.5" style={{ background: "#1A1A1A", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
-            <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FF5F56" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#FFBD2E" }} />
-              <div className="w-2.5 h-2.5 rounded-full" style={{ background: "#27C93F" }} />
-            </div>
-            <span className="text-[9px] text-white/20 ml-2 truncate">{project.title}</span>
-          </div>
-          <div ref={screenshotRef} className="flex-1 overflow-hidden bg-[#0D0D0D] flex items-center justify-center will-change-transform">
-            <img src={hero} alt="" className="w-full h-full object-cover" draggable={false} />
-          </div>
-        </div>
-
-        {capabilities.length > 0 && (
-          <div ref={pillsRef} className="flex flex-wrap gap-1.5 mt-3" style={{ opacity: 0 }}>
-            {capabilities.map((cap) => (
-              <span key={cap} className="text-[10px] px-2 py-0.5 rounded-full"
-                style={{ background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.35)", border: "1px solid rgba(255,255,255,0.04)" }}>
-                {cap}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div ref={btnRef} className="mt-2">
+        <div ref={buttonsRef} className="flex gap-2 pointer-events-auto">
+          {isLive && (
+            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
+              onClick={(e) => { e.stopPropagation(); handleVisit(e); }}
+              className="text-[11px] font-medium px-3.5 py-1.5 rounded-lg transition-colors"
+              style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}>
+              Visit Website ↗
+            </a>
+          )}
           <button onClick={handleClick}
             className="text-[11px] font-medium px-3.5 py-1.5 rounded-lg transition-colors"
             style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
