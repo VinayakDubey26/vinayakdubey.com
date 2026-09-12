@@ -195,58 +195,6 @@ export const softwareProjects = [
     },
   },
   {
-    id: "business-mobile",
-    title: "Carat Mobile",
-    status: "In Development",
-    detailVariant: "mobile-split",
-    accent: "#D6A84F",
-    accentSecondary: "#4F7CFF",
-    categoryLabel: "MOBILE APPLICATION",
-    description:
-      "An owner-focused companion app for monitoring business activity, reviewing reports and handling approvals away from the office.",
-    impact:
-      "Keeps business owners connected to operations with dashboards, reports and approvals from anywhere.",
-    technologies: ["React Native", "Expo", "TypeScript", "REST APIs", "FastAPI"],
-    category: "software",
-    folder: "Carat Mobile",
-    images: [
-      "dashboard.webp",
-      "reports.webp",
-      "activity.webp",
-      "approval.webp",
-      "dark.webp",
-    ],
-    cardPreview: {
-      center: "dashboard.webp",
-      left: "activity.webp",
-      right: "reports.webp",
-    },
-    whatIBuilt:
-      "I built a mobile companion for Carat Business OS focused on business owners rather than employees. It gives owners access to dashboards, reports, approvals and recent business activity without requiring them to remain at their office computer.",
-    whyIBuiltIt:
-      "Business owners often leave the office but still need visibility into collections, payments, approvals, sales and daily activity. Carat Mobile was created to keep the owner connected to important decisions while the desktop system continues running the business inside the office.",
-    includes: [
-      "Owner dashboard",
-      "Business summaries",
-      "Reports",
-      "Approval workflows",
-      "Activity timeline",
-      "Collections and payment visibility",
-      "Operational alerts and pending actions",
-      "Light and dark interface support",
-      "Secure connection to the Carat platform",
-      "Mobile entitlement and access controls",
-    ],
-    howIBuiltIt:
-      "I designed the mobile information architecture, owner workflows, API integration, authentication flow, approval experience, reporting views and responsive mobile interface as part of the wider Carat product ecosystem.",
-    techStack: {
-      Mobile: ["React Native", "Expo", "TypeScript"],
-      Integration: ["REST APIs", "Secure authentication", "Shared business permissions", "Mobile entitlement controls"],
-      "Backend Integration": ["FastAPI", "PostgreSQL"],
-      Development: ["Component-based architecture", "Automated testing", "Responsive mobile layouts"],
-    },
-  },
-  {
     id: "inventory-platform",
     title: "Custom Business Management Software",
     status: "Prototype",
@@ -292,6 +240,61 @@ export const softwareProjects = [
       Backend: ["FastAPI", "Python", "SQLAlchemy"],
       Database: ["PostgreSQL", "Alembic migrations"],
       Architecture: ["REST APIs", "Role-based permissions", "Modular business workflows", "Reusable component architecture"],
+    },
+  },
+];
+
+export const mobileProjects = [
+  {
+    id: "business-mobile",
+    title: "Carat Mobile",
+    status: "In Development",
+    detailVariant: "mobile-split",
+    accent: "#D6A84F",
+    accentSecondary: "#4F7CFF",
+    categoryLabel: "MOBILE APPLICATION",
+    description:
+      "An owner-focused companion app for monitoring business activity, reviewing reports and handling approvals away from the office.",
+    impact:
+      "Keeps business owners connected to operations with dashboards, reports and approvals from anywhere.",
+    technologies: ["React Native", "Expo", "TypeScript", "REST APIs", "FastAPI"],
+    category: "mobile",
+    folder: "Carat Mobile",
+    images: [
+      "dashboard.webp",
+      "reports.webp",
+      "activity.webp",
+      "approval.webp",
+      "dark.webp",
+    ],
+    cardPreview: {
+      center: "dashboard.webp",
+      left: "activity.webp",
+      right: "reports.webp",
+    },
+    whatIBuilt:
+      "I built a mobile companion for Carat Business OS focused on business owners rather than employees. It gives owners access to dashboards, reports, approvals and recent business activity without requiring them to remain at their office computer.",
+    whyIBuiltIt:
+      "Business owners often leave the office but still need visibility into collections, payments, approvals, sales and daily activity. Carat Mobile was created to keep the owner connected to important decisions while the desktop system continues running the business inside the office.",
+    includes: [
+      "Owner dashboard",
+      "Business summaries",
+      "Reports",
+      "Approval workflows",
+      "Activity timeline",
+      "Collections and payment visibility",
+      "Operational alerts and pending actions",
+      "Light and dark interface support",
+      "Secure connection to the Carat platform",
+      "Mobile entitlement and access controls",
+    ],
+    howIBuiltIt:
+      "I designed the mobile information architecture, owner workflows, API integration, authentication flow, approval experience, reporting views and responsive mobile interface as part of the wider Carat product ecosystem.",
+    techStack: {
+      Mobile: ["React Native", "Expo", "TypeScript"],
+      Integration: ["REST APIs", "Secure authentication", "Shared business permissions", "Mobile entitlement controls"],
+      "Backend Integration": ["FastAPI", "PostgreSQL"],
+      Development: ["Component-based architecture", "Automated testing", "Responsive mobile layouts"],
     },
   },
 ];

@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectRow from "./ProjectRow";
 import ProjectModal from "./ProjectModal";
 import ErrorBoundary from "./ErrorBoundary";
-import { websiteProjects, softwareProjects } from "../data/projectsData";
+import { websiteProjects, softwareProjects, mobileProjects } from "../data/projectsData";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,6 +81,12 @@ const SelectedWork = () => {
         <ProjectRow
           title="SOFTWARE"
           projects={softwareProjects}
+          onViewDetails={setModalProject}
+        />
+
+        <ProjectRow
+          title="MOBILE APPLICATION"
+          projects={mobileProjects}
           onViewDetails={setModalProject}
         />
       </div>
