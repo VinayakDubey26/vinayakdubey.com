@@ -15,9 +15,19 @@ const DIRECT_LINKS = [
 const inputClasses =
   "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-[#f5f5f7] placeholder:text-white/30 transition-colors duration-200 focus:outline-none focus:border-white/30 focus:bg-white/8";
 
+const PROJECT_TYPES = [
+  "Business Software",
+  "Mobile App",
+  "Ecommerce Website",
+  "Business Website",
+  "Operational System",
+  "Something Else",
+];
+
 const ContactSection = () => {
   const sectionRef = useRef(null);
   const [status, setStatus] = useState("idle");
+  const [projectType, setProjectType] = useState("");
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -161,16 +171,51 @@ const ContactSection = () => {
             </div>
 
             <div className="mt-5">
+              <span id="contact-project-type-label" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
+                What do you want to build?
+              </span>
+              <div
+                role="radiogroup"
+                aria-labelledby="contact-project-type-label"
+                className="flex flex-wrap gap-2"
+              >
+                {PROJECT_TYPES.map((type) => {
+                  const selected = projectType === type;
+                  return (
+                    <label
+                      key={type}
+                      className={`cursor-pointer rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 select-none ${
+                        selected
+                          ? "border-[#f5f5f7] bg-[#f5f5f7] text-[#050505]"
+                          : "border-white/10 bg-white/5 text-white/60 hover:border-white/30 hover:text-white"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="project-type"
+                        value={type}
+                        required
+                        checked={selected}
+                        onChange={() => setProjectType(type)}
+                        className="sr-only"
+                      />
+                      {type}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="mt-5">
               <label htmlFor="contact-message" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
-                Message
+                Project details <span className="normal-case tracking-normal text-white/30">(optional)</span>
               </label>
               <textarea
                 id="contact-message"
                 name="message"
-                required
                 rows={5}
                 maxLength={2000}
-                placeholder="Tell me about your project..."
+                placeholder="Anything else? Timeline, features, links..."
                 className={`${inputClasses} resize-y`}
               />
             </div>
