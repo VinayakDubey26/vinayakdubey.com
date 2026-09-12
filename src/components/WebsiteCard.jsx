@@ -42,9 +42,12 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
       return () => ctx.revert();
     }
 
-    // Hover intent: only play the hover state after the cursor has
-    // rested on the card briefly, so scrolling past cards doesn't
-    // trigger hover animations mid-scroll.
+    // Hover intent on the image only (not the whole card): the zoom +
+    // reveal plays after the cursor has rested on the preview briefly.
+    // Buttons and badges sit above the image layer, so hovering them
+    // alone doesn't fire the effect — scrolling past the section no
+    // longer triggers hover animations mid-scroll.
+    const media = bgRef.current;
     let hoverTimer = null;
 
     const playEnter = () => {
@@ -74,14 +77,18 @@ const WebsiteCard = ({ project, onViewDetails, dragRef }) => {
       gsap.to(borderRef.current, { opacity: 0.2, duration: 0.45, ease: "power2.out" });
     };
 
-    card.addEventListener("mouseenter", onEnter);
-    card.addEventListener("mouseleave", onLeave);
+    if (media) {
+      media.addEventListener("mouseenter", onEnter);
+      media.addEventListener("mouseleave", onLeave);
+    }
 
     return () => {
       if (hoverTimer) clearTimeout(hoverTimer);
       ctx.revert();
-      card.removeEventListener("mouseenter", onEnter);
-      card.removeEventListener("mouseleave", onLeave);
+      if (media) {
+        media.removeEventListener("mouseenter", onEnter);
+        media.removeEventListener("mouseleave", onLeave);
+      }
     };
   }, []);
 

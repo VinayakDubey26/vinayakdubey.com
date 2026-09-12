@@ -160,7 +160,15 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     };
 
     const onWheel = (e) => {
+      // Only hijack the gesture when it's clearly horizontal AND the row
+      // can actually scroll further that way — otherwise a diagonal
+      // trackpad scroll or a row already at its edge would kill the
+      // page's vertical scroll dead.
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        const max = el.scrollWidth - el.clientWidth;
+        if (max <= 0) return;
+        const canScroll = e.deltaX > 0 ? el.scrollLeft < max - 1 : el.scrollLeft > 1;
+        if (!canScroll) return;
         el.scrollLeft += e.deltaX;
         updateProgress();
         e.preventDefault();
@@ -170,7 +178,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     el.addEventListener("pointerdown", onDown, { passive: false });
     el.addEventListener("pointermove", onMove, { passive: false });
     el.addEventListener("pointerup", onUp);
-    el.addEventListener("pointercancel", onUp);
+    el.addEventListener("pointercancel", resetDragState);
     el.addEventListener("pointerleave", onLeave);
     el.addEventListener("wheel", onWheel, { passive: false });
     el.addEventListener("scroll", updateProgress, { passive: true });
@@ -180,7 +188,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       el.removeEventListener("pointerdown", onDown);
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerup", onUp);
-      el.removeEventListener("pointercancel", onUp);
+      el.removeEventListener("pointercancel", resetDragState);
       el.removeEventListener("pointerleave", onLeave);
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", updateProgress);
@@ -209,7 +217,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          touchAction: "auto",
+          touchAction: "pan-y",
           WebkitOverflowScrolling: "touch",
           cursor: "grab",
         }}
