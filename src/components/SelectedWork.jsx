@@ -63,15 +63,12 @@ const SelectedWork = () => {
       ref={sectionRef}
       className="relative py-16 md:py-24 lg:py-32 bg-[#050505] text-[#f5f5f7] overflow-hidden selected-work-section"
     >
-      {/* Neighbor dimming + glow */}
+      {/* Neighbor dimming */}
       <style>{`
         .scroll-row:hover .card-item:not(:hover) {
           opacity: 0.5;
           filter: brightness(0.6);
           transition: opacity 0.4s ease, filter 0.4s ease;
-        }
-        .card-item:hover {
-          box-shadow: 0 0 30px rgba(255,255,255,0.03), 0 0 60px rgba(255,255,255,0.01);
         }
       `}</style>
 

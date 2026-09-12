@@ -504,25 +504,14 @@ const ProjectModal = ({ project, onClose }) => {
           {project.techStack && (
             <section ref={techStackRef} data-reveal className="mt-8">
               <SectionMarker index={1} label="Technology Stack" accent={accent} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" data-stagger>
-                {Object.entries(project.techStack).map(([group, tags]) => {
-                  const groupAccent = { Frontend: "#4F7CFF", Desktop: "#A78BFA", Backend: "#22C987", Database: "#D6A84F", "Architecture & Infrastructure": "#5BC0DE", Mobile: "#4F7CFF", Integration: "#A78BFA", "Backend Integration": "#22C987", Development: "#5BC0DE" }[group] || accent;
-                  return (
-                    <div key={group} data-reveal-item className="rounded-xl p-3 md:p-4 transition-all duration-200 hover:-translate-y-0.5"
-                      style={{ background: "#121212", border: "1px solid rgba(255,255,255,0.06)" }}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-2 h-2 rounded-full shrink-0" style={{ background: groupAccent }} />
-                        <h4 className="text-[11px] font-semibold uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.5)" }}>{group}</h4>
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {tags.map((tag) => (
-                          <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full"
-                            style={{ background: `rgba(${hexToRgb(groupAccent)}, 0.1)`, color: `rgba(255,255,255,0.6)` }}>{tag}</span>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="max-w-[720px]" data-stagger>
+                {Object.entries(project.techStack).map(([group, tags]) => (
+                  <div key={group} data-reveal-item className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-3"
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <h4 className="text-[11px] font-semibold uppercase tracking-widest shrink-0 sm:w-[200px]" style={{ color: "rgba(255,255,255,0.5)" }}>{group}</h4>
+                    <p className="text-xs md:text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>{tags.join("  ·  ")}</p>
+                  </div>
+                ))}
               </div>
             </section>
           )}
@@ -530,9 +519,7 @@ const ProjectModal = ({ project, onClose }) => {
           {project.whatIBuilt && (
             <section ref={overviewRef} data-reveal className="mt-8">
               <SectionMarker index={2} label="What I Built" accent={accent} />
-              <div className="rounded-xl p-5 md:p-6" style={{ background: `rgba(${accentRgb}, 0.04)`, borderLeft: `2px solid ${accent}`, borderRadius: "12px" }}>
-                <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.whatIBuilt}</p>
-              </div>
+              <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.whatIBuilt}</p>
             </section>
           )}
 
@@ -553,32 +540,22 @@ const ProjectModal = ({ project, onClose }) => {
           {project.includes?.length > 0 && (
             <section ref={buildRef} data-reveal className="mt-8">
               <SectionMarker index={4} label="Key Features" accent={accent} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2" data-stagger>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 max-w-[720px]" data-stagger>
                 {project.includes.map((item) => (
-                  <div key={item} data-reveal-item className="rounded-xl p-3 md:p-4 transition-all duration-200 hover:-translate-y-0.5"
-                    style={{ background: "#111111", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div className="flex items-start gap-2.5">
-                      <span className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
-                        style={{ background: `rgba(${accentRgb}, 0.12)`, color: accent }}>✓</span>
-                      <span className="text-xs md:text-sm leading-snug" style={{ color: "rgba(255,255,255,0.7)" }}>{item}</span>
-                    </div>
-                  </div>
+                  <li key={item} data-reveal-item className="flex items-start gap-2.5 py-2.5"
+                    style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+                    <span className="mt-0.5 text-xs font-bold shrink-0" style={{ color: accent }}>✓</span>
+                    <span className="text-xs md:text-sm leading-snug" style={{ color: "rgba(255,255,255,0.7)" }}>{item}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </section>
           )}
 
           {project.howIBuiltIt && (
             <section ref={stackRef} data-reveal className="mt-8">
               <SectionMarker index={5} label="How I Built It" accent={accent} />
-              <div className="relative rounded-xl overflow-hidden" style={{ background: "#0E0E0E", border: "1px solid rgba(255,255,255,0.06)", borderTop: `2px solid ${accent}` }}>
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                  style={{ backgroundImage: `radial-gradient(circle, ${accent} 1px, transparent 1px)`, backgroundSize: "24px 24px" }} />
-                <div className="relative p-5 md:p-6">
-                  <div className="text-[11px] font-semibold uppercase tracking-widest mb-3" style={{ color: accent }}>Implementation</div>
-                  <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.howIBuiltIt}</p>
-                </div>
-              </div>
+              <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.howIBuiltIt}</p>
             </section>
           )}
 
@@ -982,21 +959,12 @@ const ProjectModal = ({ project, onClose }) => {
                 {project.whatIBuilt && (
                   <section ref={overviewRef} data-reveal>
                     <SectionMarker index={1} label="What I Built" accent={accent} />
-                    <div
-                      className="rounded-xl p-6 md:p-7"
-                      style={{
-                        background: `rgba(${accentRgb}, 0.04)`,
-                        borderLeft: `2px solid ${accent}`,
-                        borderRadius: "12px",
-                      }}
+                    <p
+                      className="text-sm md:text-base leading-relaxed max-w-[720px]"
+                      style={{ color: "rgba(255,255,255,0.72)" }}
                     >
-                      <p
-                        className="text-sm md:text-base leading-relaxed max-w-[720px]"
-                        style={{ color: "rgba(255,255,255,0.72)" }}
-                      >
-                        {project.whatIBuilt}
-                      </p>
-                    </div>
+                      {project.whatIBuilt}
+                    </p>
                   </section>
                 )}
 
@@ -1004,64 +972,28 @@ const ProjectModal = ({ project, onClose }) => {
                 {project.techStack && (
                   <section ref={techStackRef} data-reveal>
                     <SectionMarker index={2} label="Technology Stack" accent={accent} />
-                    <div
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
-                      data-stagger
-                    >
-                      {Object.entries(project.techStack).map(([group, tags]) => {
-                        const groupAccent = {
-                          Frontend: "#4F7CFF",
-                          Desktop: "#A78BFA",
-                          Backend: "#22C987",
-                          Database: "#D6A84F",
-                          "Architecture & Infrastructure": "#5BC0DE",
-                          Mobile: "#4F7CFF",
-                          Integration: "#A78BFA",
-                          "Backend Integration": "#22C987",
-                          Development: "#5BC0DE",
-                        }[group] || accent;
-
-                        return (
-                          <div
-                            key={group}
-                            data-reveal-item
-                            className="rounded-xl p-4 md:p-5 transition-all duration-200 hover:-translate-y-0.5"
-                            style={{
-                              background: "#121212",
-                              border: "1px solid rgba(255,255,255,0.06)",
-                            }}
+                    <div className="max-w-[720px]" data-stagger>
+                      {Object.entries(project.techStack).map(([group, tags]) => (
+                        <div
+                          key={group}
+                          data-reveal-item
+                          className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 py-3"
+                          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                        >
+                          <h4
+                            className="text-[11px] font-semibold uppercase tracking-widest shrink-0 sm:w-[220px]"
+                            style={{ color: "rgba(255,255,255,0.5)" }}
                           >
-                            {/* Category header */}
-                            <div className="flex items-center gap-2 mb-3">
-                              <div
-                                className="w-2 h-2 rounded-full shrink-0"
-                                style={{ background: groupAccent }}
-                              />
-                              <h4
-                                className="text-[11px] font-semibold uppercase tracking-widest"
-                                style={{ color: "rgba(255,255,255,0.5)" }}
-                              >
-                                {group}
-                              </h4>
-                            </div>
-                            {/* Tags */}
-                            <div className="flex flex-wrap gap-1.5">
-                              {tags.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="text-[11px] px-2.5 py-1 rounded-full"
-                                  style={{
-                                    background: `rgba(${hexToRgb(groupAccent)}, 0.1)`,
-                                    color: `rgba(255,255,255,0.6)`,
-                                  }}
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
+                            {group}
+                          </h4>
+                          <p
+                            className="text-xs md:text-sm leading-relaxed"
+                            style={{ color: "rgba(255,255,255,0.7)" }}
+                          >
+                            {tags.join("  ·  ")}
+                          </p>
+                        </div>
+                      ))}
                     </div>
                   </section>
                 )}
@@ -1095,40 +1027,32 @@ const ProjectModal = ({ project, onClose }) => {
                 {project.includes?.length > 0 && (
                   <section ref={buildRef} data-reveal>
                     <SectionMarker index={4} label="Key Features" accent={accent} />
-                    <div
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+                    <ul
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 max-w-[720px]"
                       data-stagger
                     >
                       {project.includes.map((item) => (
-                        <div
+                        <li
                           key={item}
                           data-reveal-item
-                          className="rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5"
-                          style={{
-                            background: "#111111",
-                            border: "1px solid rgba(255,255,255,0.06)",
-                          }}
+                          className="flex items-start gap-2.5 py-2.5"
+                          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
                         >
-                          <div className="flex items-start gap-2.5">
-                            <span
-                              className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold"
-                              style={{
-                                background: `rgba(${accentRgb}, 0.12)`,
-                                color: accent,
-                              }}
-                            >
-                              ✓
-                            </span>
-                            <span
-                              className="text-xs md:text-sm leading-snug"
-                              style={{ color: "rgba(255,255,255,0.7)" }}
-                            >
-                              {item}
-                            </span>
-                          </div>
-                        </div>
+                          <span
+                            className="mt-0.5 text-xs font-bold shrink-0"
+                            style={{ color: accent }}
+                          >
+                            ✓
+                          </span>
+                          <span
+                            className="text-xs md:text-sm leading-snug"
+                            style={{ color: "rgba(255,255,255,0.7)" }}
+                          >
+                            {item}
+                          </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </section>
                 )}
 
@@ -1136,39 +1060,12 @@ const ProjectModal = ({ project, onClose }) => {
                 {project.howIBuiltIt && (
                   <section ref={stackRef} data-reveal>
                     <SectionMarker index={5} label="How I Built It" accent={accent} />
-
-                    {/* Code-grid background */}
-                    <div
-                      className="relative rounded-xl overflow-hidden"
-                      style={{
-                        background: "#0E0E0E",
-                        border: `1px solid rgba(255,255,255,0.06)`,
-                        borderTop: `2px solid ${accent}`,
-                      }}
+                    <p
+                      className="text-sm md:text-base leading-relaxed max-w-[720px]"
+                      style={{ color: "rgba(255,255,255,0.72)" }}
                     >
-                      {/* Dot grid pattern */}
-                      <div
-                        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-                        style={{
-                          backgroundImage: `radial-gradient(circle, ${accent} 1px, transparent 1px)`,
-                          backgroundSize: "24px 24px",
-                        }}
-                      />
-                      <div className="relative p-6 md:p-7">
-                        <div
-                          className="text-[11px] font-semibold uppercase tracking-widest mb-3"
-                          style={{ color: accent }}
-                        >
-                          Implementation
-                        </div>
-                        <p
-                          className="text-sm md:text-base leading-relaxed max-w-[720px]"
-                          style={{ color: "rgba(255,255,255,0.72)" }}
-                        >
-                          {project.howIBuiltIt}
-                        </p>
-                      </div>
-                    </div>
+                      {project.howIBuiltIt}
+                    </p>
                   </section>
                 )}
 
