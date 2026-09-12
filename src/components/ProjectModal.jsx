@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { getProjectImage, isVideoFile } from "../data/projectsData";
 import { useLenisRef } from "../context/ScrollContext";
@@ -180,39 +180,42 @@ const ProjectModal = ({ project, onClose }) => {
     });
   }, [index, images]);
 
-  // Scroll-reveal animations using IntersectionObserver
-  useEffect(() => {
+  // Scroll-reveal animations using IntersectionObserver.
+  // useLayoutEffect hides sections before first paint (no flash),
+  // expo easing + earlier trigger keeps the entrance smooth, and
+  // grouped rows stagger instead of popping in as one block.
+  useLayoutEffect(() => {
     const scrollEl = scrollRef.current;
     if (!scrollEl) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const revealEls = scrollEl.querySelectorAll("[data-reveal]");
     if (revealEls.length === 0) return;
 
-    gsap.set(revealEls, { y: 28, opacity: 0 });
+    gsap.set(revealEls, { y: 24, opacity: 0 });
+    gsap.set(scrollEl.querySelectorAll("[data-reveal-item]"), { y: 18, opacity: 0 });
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
           const el = entry.target;
-          if (el.dataset.stagger) {
-            const items = el.querySelectorAll("[data-reveal-item]");
-            if (items.length) {
-              gsap.fromTo(items,
-                { y: 28, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.08 }
-              );
-            }
-          } else {
-            gsap.fromTo(el,
-              { y: 28, opacity: 0 },
-              { y: 0, opacity: 1, duration: 0.55, ease: "power3.out" }
-            );
-          }
           observer.unobserve(el);
+          gsap.to(el, { y: 0, opacity: 1, duration: 0.9, ease: "expo.out" });
+          const items = el.querySelectorAll("[data-reveal-item]");
+          if (items.length) {
+            gsap.to(items, {
+              y: 0,
+              opacity: 1,
+              duration: 0.7,
+              ease: "expo.out",
+              stagger: 0.07,
+              delay: 0.1,
+            });
+          }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.08, rootMargin: "0px 0px 64px 0px" }
     );
 
     revealEls.forEach((el) => observer.observe(el));
@@ -518,14 +521,13 @@ const ProjectModal = ({ project, onClose }) => {
 
           {project.whatIBuilt && (
             <section ref={overviewRef} data-reveal className="mt-8">
-              <SectionMarker index={2} label="What I Built" accent={accent} />
-              <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.whatIBuilt}</p>
+              <p className="text-base md:text-lg leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.78)" }}>{project.whatIBuilt}</p>
             </section>
           )}
 
           {project.whyIBuiltIt && (
             <section ref={featuresRef} data-reveal className="mt-8">
-              <SectionMarker index={3} label="Why I Built It" accent={accent} />
+                    <SectionMarker index={2} label="Why I Built It" accent={accent} />
               <div className="flex flex-col md:flex-row md:items-start gap-4 md:gap-10">
                 <div className="shrink-0 md:w-[140px]">
                   <div className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: accent }}>The Problem</div>
@@ -539,7 +541,7 @@ const ProjectModal = ({ project, onClose }) => {
 
           {project.includes?.length > 0 && (
             <section ref={buildRef} data-reveal className="mt-8">
-              <SectionMarker index={4} label="Key Features" accent={accent} />
+                    <SectionMarker index={3} label="Key Features" accent={accent} />
               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 max-w-[720px]" data-stagger>
                 {project.includes.map((item) => (
                   <li key={item} data-reveal-item className="flex items-start gap-2.5 py-2.5"
@@ -554,7 +556,7 @@ const ProjectModal = ({ project, onClose }) => {
 
           {project.howIBuiltIt && (
             <section ref={stackRef} data-reveal className="mt-8">
-              <SectionMarker index={5} label="How I Built It" accent={accent} />
+                    <SectionMarker index={4} label="How I Built It" accent={accent} />
               <p className="text-sm md:text-base leading-relaxed max-w-[720px]" style={{ color: "rgba(255,255,255,0.72)" }}>{project.howIBuiltIt}</p>
             </section>
           )}
@@ -909,44 +911,27 @@ const ProjectModal = ({ project, onClose }) => {
                 </div>
 
                 {/* Right */}
-                <div className="shrink-0">
-                  <div
-                    className="rounded-xl p-4 md:p-5 min-w-[180px]"
-                    style={{
-                      background: "#111111",
-                      border: "1px solid rgba(255,255,255,0.06)",
-                    }}
+                <div className="shrink-0 md:text-right">
+                  <div className="text-[10px] font-medium uppercase tracking-widest mb-2"
+                    style={{ color: "rgba(255,255,255,0.35)" }}
                   >
-                    <div className="text-[10px] font-medium uppercase tracking-widest mb-2"
-                      style={{ color: "rgba(255,255,255,0.35)" }}
-                    >
-                      Project Type
-                    </div>
-                    <div className="text-xs font-medium mb-3"
-                      style={{ color: "rgba(255,255,255,0.7)" }}
-                    >
-                      {project.categoryLabel || project.category}
-                    </div>
-                    <div className="text-[10px] font-medium uppercase tracking-widest mb-2"
-                      style={{ color: "rgba(255,255,255,0.35)" }}
-                    >
-                      Technologies
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.technologies?.slice(0, 4).map((t) => (
-                        <span
-                          key={t}
-                          className="text-[10px] px-2 py-0.5 rounded-full"
-                          style={{
-                            background: `rgba(${accentRgb}, 0.08)`,
-                            color: `rgba(255,255,255,0.55)`,
-                          }}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
+                    Project Type
                   </div>
+                  <div className="text-xs font-medium mb-3"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {project.categoryLabel || project.category}
+                  </div>
+                  <div className="text-[10px] font-medium uppercase tracking-widest mb-2"
+                    style={{ color: "rgba(255,255,255,0.35)" }}
+                  >
+                    Technologies
+                  </div>
+                  <p className="text-xs leading-relaxed"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {project.technologies?.slice(0, 4).join("  ·  ")}
+                  </p>
                 </div>
               </div>
             </div>
@@ -958,10 +943,9 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* 01 — What I Built */}
                 {project.whatIBuilt && (
                   <section ref={overviewRef} data-reveal>
-                    <SectionMarker index={1} label="What I Built" accent={accent} />
                     <p
-                      className="text-sm md:text-base leading-relaxed max-w-[720px]"
-                      style={{ color: "rgba(255,255,255,0.72)" }}
+                      className="text-base md:text-lg leading-relaxed max-w-[720px]"
+                      style={{ color: "rgba(255,255,255,0.78)" }}
                     >
                       {project.whatIBuilt}
                     </p>
@@ -971,7 +955,7 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* 02 — Technology Stack */}
                 {project.techStack && (
                   <section ref={techStackRef} data-reveal>
-                    <SectionMarker index={2} label="Technology Stack" accent={accent} />
+                    <SectionMarker index={1} label="Technology Stack" accent={accent} />
                     <div className="max-w-[720px]" data-stagger>
                       {Object.entries(project.techStack).map(([group, tags]) => (
                         <div
@@ -1001,7 +985,7 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* 03 — Why I Built It */}
                 {project.whyIBuiltIt && (
                   <section ref={featuresRef} data-reveal>
-                    <SectionMarker index={3} label="Why I Built It" accent={accent} />
+              <SectionMarker index={2} label="Why I Built It" accent={accent} />
                     <div className="flex flex-col md:flex-row md:items-start gap-6 md:gap-10">
                       <div className="shrink-0 md:w-[140px]">
                         <div
@@ -1026,7 +1010,7 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* 04 — Key Features */}
                 {project.includes?.length > 0 && (
                   <section ref={buildRef} data-reveal>
-                    <SectionMarker index={4} label="Key Features" accent={accent} />
+              <SectionMarker index={3} label="Key Features" accent={accent} />
                     <ul
                       className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 max-w-[720px]"
                       data-stagger
@@ -1059,7 +1043,7 @@ const ProjectModal = ({ project, onClose }) => {
                 {/* 05 — How I Built It */}
                 {project.howIBuiltIt && (
                   <section ref={stackRef} data-reveal>
-                    <SectionMarker index={5} label="How I Built It" accent={accent} />
+              <SectionMarker index={4} label="How I Built It" accent={accent} />
                     <p
                       className="text-sm md:text-base leading-relaxed max-w-[720px]"
                       style={{ color: "rgba(255,255,255,0.72)" }}
@@ -1094,21 +1078,12 @@ const ProjectModal = ({ project, onClose }) => {
               <div className="mt-10 space-y-8">
                 <div data-reveal>
                   <SectionMarker index={1} label="Technology Stack" accent={accent} />
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="text-xs px-3 py-1.5 rounded-full"
-                        style={{
-                          background: `rgba(${accentRgb}, 0.06)`,
-                          color: "rgba(255,255,255,0.55)",
-                          border: "1px solid rgba(255,255,255,0.05)",
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
+                  <p
+                    className="text-xs md:text-sm leading-relaxed max-w-[720px]"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    {project.technologies.join("  ·  ")}
+                  </p>
                 </div>
 
                 {project.liveUrl && (

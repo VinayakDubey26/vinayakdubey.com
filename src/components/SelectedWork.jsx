@@ -13,7 +13,6 @@ const SelectedWork = () => {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
-  const spotlightRef = useRef(null);
 
   // Section intro animation
   useEffect(() => {
@@ -41,23 +40,6 @@ const SelectedWork = () => {
     return () => ctx.revert();
   }, []);
 
-  // Spotlight cursor effect (desktop only)
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || window.matchMedia("(pointer: coarse)").matches) return;
-
-    const onMove = (e) => {
-      if (!spotlightRef.current) return;
-      const rect = section.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      spotlightRef.current.style.background = `radial-gradient(500px circle at ${x}px ${y}px, rgba(255,255,255,0.02), transparent 70%)`;
-    };
-
-    section.addEventListener("pointermove", onMove);
-    return () => section.removeEventListener("pointermove", onMove);
-  }, []);
-
   return (
     <section
       ref={sectionRef}
@@ -71,13 +53,6 @@ const SelectedWork = () => {
           transition: opacity 0.4s ease, filter 0.4s ease;
         }
       `}</style>
-
-      {/* Spotlight */}
-      <div
-        ref={spotlightRef}
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{ background: "transparent" }}
-      />
 
       <div className="relative z-10 max-w-[1600px] mx-auto">
         {/* Section intro */}

@@ -317,7 +317,7 @@ const IntroHero = () => {
 
         {visibleLinks.length > 0 && (
           <div
-            className="hero-social-row flex items-center justify-start md:justify-end gap-[10px] md:gap-[14px] mt-7 w-full overflow-visible flex-wrap md:flex-nowrap md:pr-[clamp(12px,4vw,64px)]"
+            className="hero-social-row flex items-center justify-start gap-[10px] md:gap-[14px] mt-7 w-full overflow-visible flex-nowrap"
             style={{ minHeight: "58px" }}
           >
             {visibleLinks.map((s) => {

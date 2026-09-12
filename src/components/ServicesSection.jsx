@@ -53,15 +53,6 @@ const ServicesSection = () => {
       className="relative overflow-hidden bg-[#050505] py-16 text-[#f5f5f7] md:py-24 lg:py-32"
       aria-labelledby="services-heading"
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(700px circle at 20% 20%, rgba(255,255,255,0.03), transparent 65%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div className="relative z-10 mx-auto max-w-[1600px] px-6 md:px-10">
         <div className="max-w-[900px]">
           <p

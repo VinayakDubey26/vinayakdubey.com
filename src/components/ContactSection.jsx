@@ -61,15 +61,6 @@ const ContactSection = () => {
       className="relative overflow-hidden bg-[#050505] py-16 md:py-24 lg:py-32 text-[#f5f5f7]"
       aria-label="Contact"
     >
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(700px circle at 80% 20%, rgba(255,255,255,0.03), transparent 65%)",
-        }}
-        aria-hidden="true"
-      />
-
       <div className="relative z-10 mx-auto max-w-[1600px] px-6 md:px-10">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
           <div>
