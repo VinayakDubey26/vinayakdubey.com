@@ -20,18 +20,7 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
   const buttonsRef = useRef(null);
   const borderRef = useRef(null);
 
-  const previewCenter = getProjectImage(
-    project.folder,
-    project.cardPreview?.center || project.images[0]
-  );
-  const previewLeft = getProjectImage(
-    project.folder,
-    project.cardPreview?.left || project.images[2] || project.images[0]
-  );
-  const previewRight = getProjectImage(
-    project.folder,
-    project.cardPreview?.right || project.images[1] || project.images[0]
-  );
+  const hero = getProjectImage(project.folder, project.images[0]);
   const isLive = !!project.liveUrl;
   const statusStyle = project.status ? statusColors[project.status] || statusColors.Concept : statusColors.Concept;
   const statusText = isLive ? "LIVE" : project.status?.toUpperCase() || "CONCEPT";
@@ -53,7 +42,13 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
       return () => ctx.revert();
     }
 
-    const onEnter = () => {
+    // Hover intent: only play the hover state after the cursor has
+    // rested on the card briefly, so scrolling past cards doesn't
+    // trigger hover animations mid-scroll.
+    let hoverTimer = null;
+
+    const playEnter = () => {
+      hoverTimer = null;
       gsap.to(bgRef.current, { scale: 1.06, duration: 0.45, ease: "power2.out" });
       gsap.to(darkRef.current, { opacity: 1, duration: 0.45, ease: "power2.out" });
       gsap.to(titleRef.current, { y: -4, duration: 0.45, ease: "power2.out" });
@@ -63,7 +58,13 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
       gsap.to(borderRef.current, { opacity: 0.5, duration: 0.45, ease: "power2.out" });
     };
 
+    const onEnter = () => {
+      if (hoverTimer) clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(playEnter, 180);
+    };
+
     const onLeave = () => {
+      if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
       gsap.to(bgRef.current, { scale: 1, duration: 0.45, ease: "power2.out" });
       gsap.to(darkRef.current, { opacity: 0, duration: 0.45, ease: "power2.out" });
       gsap.to(titleRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
@@ -77,6 +78,7 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
     card.addEventListener("mouseleave", onLeave);
 
     return () => {
+      if (hoverTimer) clearTimeout(hoverTimer);
       ctx.revert();
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
@@ -105,31 +107,8 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
       <div ref={borderRef} className="absolute inset-0 rounded-[24px] pointer-events-none z-20"
         style={{ border: "1px solid rgba(255,255,255,0.06)", opacity: 0.2 }} />
 
-      {/* Phone-preview media layer — same card chrome as WebsiteCard,
-          but staged for portrait app screenshots so they don't get
-          cropped like a landscape bg-cover would. */}
-      <div ref={bgRef} className="absolute inset-0 overflow-hidden will-change-transform"
-        style={{ background: "#0A0A0A" }}>
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(420px circle at 50% 42%, rgba(255,255,255,0.07), transparent 70%)" }} />
-        <div className="absolute inset-0 flex items-end justify-center gap-2.5 md:gap-3 px-10 pb-0 pt-8">
-          <div className="h-[68%] w-[26%] shrink-0 overflow-hidden rounded-t-[14px] border border-b-0 border-white/10 opacity-60"
-            style={{ transform: "translateY(6%)" }}>
-            <img src={previewLeft} alt="" aria-hidden="true" draggable={false}
-              className="h-full w-full object-cover object-top select-none" />
-          </div>
-          <div className="h-[84%] w-[30%] shrink-0 overflow-hidden rounded-t-[16px] border border-b-0 border-white/15"
-            style={{ boxShadow: "0 8px 40px rgba(0,0,0,0.5)" }}>
-            <img src={previewCenter} alt={`${project.title} preview`} draggable={false}
-              className="h-full w-full object-cover object-top select-none" />
-          </div>
-          <div className="h-[68%] w-[26%] shrink-0 overflow-hidden rounded-t-[14px] border border-b-0 border-white/10 opacity-60"
-            style={{ transform: "translateY(6%)" }}>
-            <img src={previewRight} alt="" aria-hidden="true" draggable={false}
-              className="h-full w-full object-cover object-top select-none" />
-          </div>
-        </div>
-      </div>
+      <div ref={bgRef} className="absolute inset-0 bg-cover bg-center will-change-transform"
+        style={{ backgroundImage: `url(${hero})` }} />
 
       <div className="absolute inset-0 z-10 pointer-events-none"
         style={{ background: "linear-gradient(to top, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.45) 32%, rgba(5,5,5,0.12) 55%, transparent 75%)" }} />

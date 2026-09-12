@@ -42,7 +42,13 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
       return () => ctx.revert();
     }
 
-    const onEnter = () => {
+    // Hover intent: only play the hover state after the cursor has
+    // rested on the card briefly, so scrolling past cards doesn't
+    // trigger hover animations mid-scroll.
+    let hoverTimer = null;
+
+    const playEnter = () => {
+      hoverTimer = null;
       gsap.to(bgRef.current, { scale: 1.06, duration: 0.45, ease: "power2.out" });
       gsap.to(darkRef.current, { opacity: 1, duration: 0.45, ease: "power2.out" });
       gsap.to(titleRef.current, { y: -4, duration: 0.45, ease: "power2.out" });
@@ -52,7 +58,13 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
       gsap.to(borderRef.current, { opacity: 0.5, duration: 0.45, ease: "power2.out" });
     };
 
+    const onEnter = () => {
+      if (hoverTimer) clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(playEnter, 180);
+    };
+
     const onLeave = () => {
+      if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null; }
       gsap.to(bgRef.current, { scale: 1, duration: 0.45, ease: "power2.out" });
       gsap.to(darkRef.current, { opacity: 0, duration: 0.45, ease: "power2.out" });
       gsap.to(titleRef.current, { y: 0, duration: 0.45, ease: "power2.out" });
@@ -66,6 +78,7 @@ const DesktopSoftwareCard = ({ project, onViewDetails, dragRef }) => {
     card.addEventListener("mouseleave", onLeave);
 
     return () => {
+      if (hoverTimer) clearTimeout(hoverTimer);
       ctx.revert();
       card.removeEventListener("mouseenter", onEnter);
       card.removeEventListener("mouseleave", onLeave);
