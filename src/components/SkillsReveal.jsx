@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+﻿import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -38,80 +38,101 @@ const SKILL_ENTER = "top 92%";
 const SkillsReveal = () => {
   const sectionRef = useRef(null);
   const introRef = useRef(null);
+  const introTextRef = useRef(null);
+  const cursorRef = useRef(null);
+  const dropRef = useRef(null);
 
   // Safe defaults: static final state unless animation initializes.
   const [animationReady, setAnimationReady] = useState(false);
-  const [displayedIntro, setDisplayedIntro] = useState(fullIntro);
   const [visibleGroups, setVisibleGroups] = useState(skillGroups.length);
-  const [sceneBg, setSceneBg] = useState("#050505");
-  const [dropScale, setDropScale] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!sectionRef.current) return;
-
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     try {
       gsap.registerPlugin(ScrollTrigger);
       const ctx = gsap.context(() => {
         setAnimationReady(true);
-        setDisplayedIntro("");
         setVisibleGroups(0);
-        setSceneBg("#f5f5f0");
-        setDropScale(0);
+
+        // Direct DOM writes for per-frame values: avoids 60fps React re-renders.
+        const sectionEl = sectionRef.current;
+        const introTextEl = introTextRef.current;
+        const dropEl = dropRef.current;
+        const cursorEl = cursorRef.current;
+
+        if (sectionEl) sectionEl.style.backgroundColor = "#f5f5f0";
+        if (introTextEl) introTextEl.textContent = "";
+        if (dropEl) dropEl.style.transform = "translate(-50%, -50%) scale(0)";
+        if (cursorEl) cursorEl.style.opacity = "1";
+
+        // Keep ScrollTrigger measurements valid after fonts/images settle.
+        const refresh = () => ScrollTrigger.refresh();
+        let rafId = 0;
+        const scheduleRefresh = () => {
+          cancelAnimationFrame(rafId);
+          rafId = requestAnimationFrame(() => requestAnimationFrame(refresh));
+        };
 
         ScrollTrigger.create({
           trigger: introRef.current,
           start: TYPING_PARA,
           end: TYPING_END,
           scrub: true,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             const progress = clamp(self.progress, 0, 1);
-
-            // Background reaches full black as the intro paragraph settles
-            // mid-screen, so the text is always readable where it appears.
             const dim = smoothstep(progress / FADE_IN_END);
             const dropT = clamp(progress / DROP_END, 0, 1);
             const easedDrop = dropT < 0.5
               ? 4 * dropT * dropT * dropT
               : 1 - Math.pow(-2 * dropT + 2, 3) / 2;
 
-            setSceneBg(bgFromProgress(dim));
-            setDropScale(easedDrop * 48);
+            if (sectionEl) sectionEl.style.backgroundColor = bgFromProgress(dim);
+            if (dropEl) dropEl.style.transform = `translate(-50%, -50%) scale(${easedDrop * 48})`;
 
-            // Type as much as has scrolled into view.
             const visibleChars = Math.floor(progress * fullIntro.length);
-            setDisplayedIntro(fullIntro.slice(0, visibleChars));
+            if (introTextEl) introTextEl.textContent = fullIntro.slice(0, visibleChars);
+            if (cursorEl) cursorEl.style.opacity = visibleChars < fullIntro.length ? "1" : "0";
           },
+          onRefresh: scheduleRefresh,
         });
 
         // Reveal each skill group as its own card enters the viewport.
         const cells = sectionRef.current.querySelectorAll(".skill-cell");
+        // Ensure initial hidden state is set before ScrollTrigger measures.
+        gsap.set(cells, { opacity: 0, filter: "blur(10px)", y: 12 });
         cells.forEach((cell, i) => {
           ScrollTrigger.create({
             trigger: cell,
             start: SKILL_ENTER,
-            onEnter: () => setVisibleGroups(Math.min(skillGroups.length, i + 1)),
+            once: true,
+            onEnter: () => {
+              setVisibleGroups((prev) => Math.max(prev, i + 1));
+              gsap.to(cell, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "power3.out", overwrite: true });
+            },
           });
         });
-      });
 
-      return () => {
-        ctx.revert();
-      };
+        // One extra refresh after setup so start/end positions account for
+        // the freshly-applied GSAP initial states and current scroll pos.
+        scheduleRefresh();
+      }, sectionRef);
+
+      return () => ctx.revert();
     } catch {
       // Fallback: keep initial state
     }
   }, []);
 
-  const showCursor = animationReady && displayedIntro.length < fullIntro.length;
-
   return (
-    <section ref={sectionRef} id="about" className="skills-reveal relative min-h-svh overflow-hidden text-[#f5f5f7]" style={{ backgroundColor: sceneBg, scrollMarginTop: 0 }} aria-label="Skills Reveal">
+    <section ref={sectionRef} id="about" className="skills-reveal relative min-h-svh overflow-hidden text-[#f5f5f7]" style={{ backgroundColor: "#050505", scrollMarginTop: 0 }} aria-label="Skills Reveal">
       <div className="skills-pin relative flex min-h-svh items-center justify-center overflow-hidden">
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[clamp(32px,8vw,120px)] w-[clamp(32px,8vw,120px)] rounded-full bg-[#050505]"
-          style={{ transform: `translate(-50%, -50%) scale(${dropScale})` }}
+          ref={dropRef}
+          className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[clamp(32px,8vw,120px)] w-[clamp(32px,8vw,120px)] rounded-full bg-[#050505] will-change-transform"
+          style={{ transform: "translate(-50%, -50%) scale(0)" }}
           aria-hidden="true"
         />
         <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
@@ -123,8 +144,8 @@ const SkillsReveal = () => {
           </div>
 
           <p ref={introRef} className="intro-copy mb-[clamp(20px,4vh,48px)] max-w-[980px] whitespace-pre-wrap text-[clamp(1.5rem,5vw,3.6rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#f8f8f4]">
-            {displayedIntro}
-            {showCursor && <span className="type-cursor">|</span>}
+            <span ref={introTextRef}>{fullIntro}</span>
+            <span ref={cursorRef} className="type-cursor" style={{ opacity: animationReady ? 0 : 1 }}>|</span>
           </p>
 
           <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[42px] md:gap-y-6 md:grid-cols-2 lg:grid-cols-3">
@@ -133,7 +154,7 @@ const SkillsReveal = () => {
               return (
                 <article
                   key={group.title}
-                  className="skill-cell transition-[opacity,filter,transform] duration-500 ease-out"
+                  className="skill-cell will-change-transform"
                   style={{
                     opacity: isVisible ? 1 : 0,
                     filter: isVisible ? "blur(0px)" : "blur(10px)",

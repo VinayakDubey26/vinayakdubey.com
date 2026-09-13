@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useLayoutEffect, useEffect, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectCard from "./ProjectCard";
@@ -14,8 +14,9 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
   const [progress, setProgress] = useState(0);
   const staggerDone = useRef(false);
 
-  // Stagger animation on viewport entry
-  useEffect(() => {
+  // Stagger animation on viewport entry — useLayoutEffect avoids flash and
+  // ensures ScrollTrigger measures correctly with Lenis driving scroll.
+  useLayoutEffect(() => {
     const cards = rowRef.current?.querySelectorAll(".card-item");
     if (!cards?.length || staggerDone.current) return;
 
@@ -25,7 +26,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       return;
     }
 
-    gsap.set(cards, { y: 40, opacity: 0 });
+    gsap.set(cards, { y: 40, opacity: 0, willChange: "transform, opacity" });
 
     let fallbackTimer = null;
 
@@ -36,15 +37,18 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
         y: 0,
         opacity: 1,
         duration: 0.6,
-        stagger: 0.1,
+        stagger: 0.08,
         ease: "power3.out",
+        overwrite: true,
+        onComplete: () => gsap.set(cards, { clearProps: "willChange" }),
       });
     };
 
     const st = ScrollTrigger.create({
       trigger: rowRef.current,
-      start: "top 82%",
+      start: "top 84%",
       once: true,
+      invalidateOnRefresh: true,
       onEnter: reveal,
     });
 
@@ -52,7 +56,9 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     // layout, Lenis edge cases on mobile), show the cards anyway.
     fallbackTimer = window.setTimeout(() => {
       if (!staggerDone.current && ScrollTrigger.isInViewport(rowRef.current)) reveal();
-    }, 1200);
+    }, 900);
+    // Ensure start position is correct after layout/fonts.
+    requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
 
     return () => {
       window.clearTimeout(fallbackTimer);
@@ -60,14 +66,17 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     };
   }, []);
 
-  // Row parallax on scroll
-  useEffect(() => {
+  // Subtle row parallax — light +/-8px to avoid jank, scrub-free onUpdate via transform.
+  useLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!rowRef.current) return;
     const st = ScrollTrigger.create({
       trigger: rowRef.current,
       start: "top bottom",
       end: "bottom top",
+      invalidateOnRefresh: true,
       onUpdate: (self) => {
-        const y = self.progress * -20 + 10;
+        const y = self.progress * -16 + 8;
         if (rowRef.current) rowRef.current.style.transform = `translateY(${y}px)`;
       },
     });

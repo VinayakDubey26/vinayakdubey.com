@@ -20,8 +20,29 @@ body,
   min-height: 100%;
 }
 
+/* Lenis smooth-scroll foundation — required so the virtual scroller and
+   ScrollTrigger measure against the same layout and never fight the
+   browser's native scroll. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overscroll-behavior: none;
+}
+
 html {
   background: var(--bg);
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -190,6 +211,16 @@ main {
   }
 }
 
+/* Keep scroll-driven work on the compositor — prevents layout thrash
+   under Lenis' RAF-driven scroll and makes transforms buttery. */
+.skills-reveal,
+.skills-pin,
+.skill-cell,
+.hero,
+.selected-work-section {
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -202,5 +233,14 @@ main {
 
   .type-cursor {
     animation: none !important;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto !important;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ResumeLink from "./ResumeLink";
@@ -29,22 +29,25 @@ const ContactSection = () => {
   const [status, setStatus] = useState("idle");
   const [projectType, setProjectType] = useState("");
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      gsap.from("[data-contact-reveal]", {
-        y: 28,
-        opacity: 0,
+      gsap.set("[data-contact-reveal]", { y: 28, opacity: 0 });
+      gsap.to("[data-contact-reveal]", {
+        y: 0,
+        opacity: 1,
         duration: 0.8,
-        stagger: 0.1,
+        stagger: 0.08,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 82%",
           once: true,
+          invalidateOnRefresh: true,
         },
       });
+      requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
     }, sectionRef);
 
     return () => ctx.revert();

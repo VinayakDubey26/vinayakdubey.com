@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectRow from "./ProjectRow";
@@ -14,27 +14,27 @@ const SelectedWork = () => {
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
 
-  // Section intro animation
-  useEffect(() => {
+  // Section intro — useLayoutEffect avoids flash and syncs with Lenis' RAF refresh.
+  useLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const ctx = gsap.context(() => {
+      gsap.set([titleRef.current, subtitleRef.current], { opacity: 0, y: 20 });
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 78%",
+          start: "top 82%",
           toggleActions: "play none none none",
+          invalidateOnRefresh: true,
         },
       });
 
-      tl.fromTo(
-        titleRef.current,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }
-      ).fromTo(
+      tl.to(titleRef.current, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }).to(
         subtitleRef.current,
-        { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, ease: "power3.out" },
         "-=0.3"
       );
+      // Ensure start positions are correct after fonts/layout settle.
+      requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
     }, sectionRef);
 
     return () => ctx.revert();

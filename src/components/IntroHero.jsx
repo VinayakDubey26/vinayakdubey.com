@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef } from "react";
+﻿import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ResumeLink from "./ResumeLink";
@@ -246,7 +246,7 @@ const IntroHero = () => {
     return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mm = window.matchMedia("(prefers-reduced-motion: reduce)");
     const section = heroSectionRef.current;
     const name = heroNameRef.current;
@@ -255,13 +255,14 @@ const IntroHero = () => {
 
     const ctx = gsap.context(() => {
       gsap.to(name, {
-        yPercent: 16,
+        yPercent: 14,
         ease: "none",
         scrollTrigger: {
           trigger: section,
           start: "top top",
           end: "bottom top",
-          scrub: true,
+          scrub: 0.6,
+          invalidateOnRefresh: true,
         },
       });
     }, section);
