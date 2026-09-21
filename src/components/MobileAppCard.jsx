@@ -108,7 +108,7 @@ const MobileAppCard = ({ project, onViewDetails, dragRef }) => {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === "Enter" && !dragRef.current && onViewDetails(project)}
-      className="card-item group relative shrink-0 rounded-[28px] overflow-hidden select-none cursor-grab active:cursor-grabbing w-[clamp(200px,58vw,280px)] md:w-[clamp(220px,30vw,300px)] lg:w-[clamp(240px,22vw,320px)] aspect-[9/19]"
+      className="card-item group relative shrink-0 rounded-[28px] overflow-hidden select-none cursor-grab active:cursor-grabbing w-[clamp(180px,44vw,240px)] md:w-[clamp(220px,30vw,300px)] lg:w-[clamp(240px,22vw,320px)] aspect-[3/4] md:aspect-[9/19]"
       style={{ background: "#0A0A0A" }}
     >
       <div ref={borderRef} className="absolute inset-0 rounded-[28px] pointer-events-none z-20"

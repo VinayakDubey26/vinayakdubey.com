@@ -10,23 +10,20 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
   const scrollRef = useRef(null);
   const rowRef = useRef(null);
   const dragRef = useRef(false);
-  const dragState = useRef({ isDown: false, startX: 0, scrollLeft: 0, moved: false, vel: 0, raf: null });
+  const dragState = useRef({ isDown: false, startX: 0, startY: 0, scrollLeft: 0, moved: false, locked: false, vel: 0, raf: null });
   const [progress, setProgress] = useState(0);
   const staggerDone = useRef(false);
 
-  // Stagger animation on viewport entry — useLayoutEffect avoids flash and
-  // ensures ScrollTrigger measures correctly with Lenis driving scroll.
   useLayoutEffect(() => {
     const cards = rowRef.current?.querySelectorAll(".card-item");
     if (!cards?.length || staggerDone.current) return;
 
-    // Reduced motion: never hide cards, show them immediately.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       staggerDone.current = true;
       return;
     }
 
-    gsap.set(cards, { y: 40, opacity: 0, willChange: "transform, opacity" });
+    gsap.set(cards, { y: 40, opacity: 0 });
 
     let fallbackTimer = null;
 
@@ -40,7 +37,6 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
         stagger: 0.08,
         ease: "power3.out",
         overwrite: true,
-        onComplete: () => gsap.set(cards, { clearProps: "willChange" }),
       });
     };
 
@@ -52,12 +48,9 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       onEnter: reveal,
     });
 
-    // Safety net: if the trigger never fires (throttled RAF, delayed
-    // layout, Lenis edge cases on mobile), show the cards anyway.
     fallbackTimer = window.setTimeout(() => {
       if (!staggerDone.current && ScrollTrigger.isInViewport(rowRef.current)) reveal();
     }, 900);
-    // Ensure start position is correct after layout/fonts.
     requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
 
     return () => {
@@ -66,7 +59,6 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     };
   }, []);
 
-  // Subtle row parallax — light +/-8px to avoid jank, scrub-free onUpdate via transform.
   useLayoutEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!rowRef.current) return;
@@ -84,7 +76,6 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     return () => st.kill();
   }, []);
 
-  // Update progress bar
   const updateProgress = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -92,7 +83,6 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     setProgress(max > 0 ? (el.scrollLeft / max) * 100 : 0);
   }, []);
 
-  // Drag-to-scroll with momentum
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -103,55 +93,79 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
     const resetDragState = () => {
       s.isDown = false;
       s.moved = false;
+      s.locked = false;
       s.vel = 0;
       if (s.raf) { cancelAnimationFrame(s.raf); s.raf = null; }
       dragRef.current = false;
-      if (el) el.style.cursor = "grab";
       if (watchdog) { clearTimeout(watchdog); watchdog = null; }
     };
 
     const onDown = (e) => {
-      // Only left click / primary touch
       if (e.button !== 0 && e.button !== undefined) return;
       s.isDown = true;
-      s.startX = e.pageX - el.offsetLeft;
+      s.startX = e.pageX;
+      s.startY = e.pageY;
       s.scrollLeft = el.scrollLeft;
       s.moved = false;
+      s.locked = false;
       s.vel = 0;
       if (s.raf) { cancelAnimationFrame(s.raf); s.raf = null; }
       dragRef.current = false;
-      el.style.cursor = "grabbing";
-      // Watchdog: force reset if pointer gets stuck down > 3s
       watchdog = setTimeout(resetDragState, 3000);
     };
 
     const onMove = (e) => {
       if (!s.isDown) return;
+
+      const dx = e.pageX - s.startX;
+      const dy = e.pageY - s.startY;
+
+      // On the first significant movement, decide the gesture direction.
+      // If vertical movement dominates, this is a page scroll — bail out
+      // entirely so Lenis / native scroll can take over.
+      if (!s.locked) {
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+        if (absDx < 8 && absDy < 8) return; // dead zone
+        if (absDy > absDx) {
+          // Vertical intent — release everything, let the page scroll.
+          resetDragState();
+          return;
+        }
+        s.locked = true; // horizontal intent confirmed
+      }
+
+      // Horizontal drag — prevent default so the browser doesn't also
+      // try to scroll the page horizontally.
       e.preventDefault();
-      const x = e.pageX - el.offsetLeft;
-      const walk = x - s.startX;
+
+      const walk = dx;
       if (Math.abs(walk) > 3) s.moved = true;
       el.scrollLeft = s.scrollLeft - walk;
-      // Cap velocity to prevent runaway
       s.vel = Math.max(-80, Math.min(80, walk));
       dragRef.current = s.moved;
       updateProgress();
-      // Reset watchdog on move
       if (watchdog) { clearTimeout(watchdog); watchdog = setTimeout(resetDragState, 3000); }
     };
 
     const onUp = () => {
       if (!s.isDown) return;
       s.isDown = false;
-      el.style.cursor = "grab";
       if (watchdog) { clearTimeout(watchdog); watchdog = null; }
 
+      if (!s.locked) {
+        // Gesture was vertical or too small — clean up.
+        resetDragState();
+        return;
+      }
+
+      // Momentum fling for horizontal drag
       const decay = 0.96;
       let v = Math.max(-80, Math.min(80, s.vel));
 
       const step = () => {
-        if (Math.abs(v) < 0.3) { s.raf = null; return; }
-        if (!el) { s.raf = null; return; }
+        if (Math.abs(v) < 0.3) { s.raf = null; resetDragState(); return; }
+        if (!el) { s.raf = null; resetDragState(); return; }
         el.scrollLeft -= v;
         v *= decay;
         updateProgress();
@@ -160,19 +174,16 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
 
       if (Math.abs(v) > 2) {
         s.raf = requestAnimationFrame(step);
+      } else {
+        resetDragState();
       }
     };
 
     const onLeave = () => {
-      // Pointer left the element - if still down, treat as cancel
       if (s.isDown) onUp();
     };
 
     const onWheel = (e) => {
-      // Only hijack the gesture when it's clearly horizontal AND the row
-      // can actually scroll further that way — otherwise a diagonal
-      // trackpad scroll or a row already at its edge would kill the
-      // page's vertical scroll dead.
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
         const max = el.scrollWidth - el.clientWidth;
         if (max <= 0) return;
@@ -184,10 +195,10 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       }
     };
 
-    el.addEventListener("pointerdown", onDown, { passive: false });
+    el.addEventListener("pointerdown", onDown, { passive: true });
     el.addEventListener("pointermove", onMove, { passive: false });
-    el.addEventListener("pointerup", onUp);
-    el.addEventListener("pointercancel", resetDragState);
+    el.addEventListener("pointerup", onUp, { passive: true });
+    el.addEventListener("pointercancel", resetDragState, { passive: true });
     el.addEventListener("pointerleave", onLeave);
     el.addEventListener("wheel", onWheel, { passive: false });
     el.addEventListener("scroll", updateProgress, { passive: true });
@@ -202,12 +213,11 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("scroll", updateProgress);
       if (s.raf) cancelAnimationFrame(s.raf);
-      // Ensure clean state on unmount
       s.isDown = false;
       s.moved = false;
+      s.locked = false;
       s.vel = 0;
       dragRef.current = false;
-      if (el) el.style.cursor = "grab";
     };
   }, [updateProgress]);
 
@@ -221,7 +231,6 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
 
       <div
         ref={scrollRef}
-        data-lenis-prevent
         className="flex gap-4 md:gap-5 overflow-x-auto px-6 md:px-10 pb-2 select-none scroll-row"
         style={{
           scrollbarWidth: "none",
