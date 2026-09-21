@@ -519,16 +519,16 @@ const ProjectModal = ({ project, onClose }) => {
     <div
       ref={modalRef}
       className="fixed inset-0 z-50"
-      style={{ background: "#080808" }}
+      style={{ background: "#080808", overflow: "hidden" }}
     >
       {/* Fixed top bar — always visible, z-30 above scroll content */}
       <div
-        className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-3 md:px-5 py-2 md:py-4"
+        className="absolute top-0 inset-x-0 z-30 flex items-center justify-between px-3 md:px-5 py-2 md:py-4 pointer-events-none"
         style={{ paddingTop: "env(safe-area-inset-top, 8px)" }}
       >
         <button
           onClick={onClose}
-          className="rounded-full bg-black/60 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm text-white/80 hover:text-white transition border active:scale-[0.95]"
+          className="pointer-events-auto rounded-full bg-black/60 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 text-xs md:text-sm text-white/80 hover:text-white transition border active:scale-[0.95]"
           style={{
             borderColor: "rgba(255,255,255,0.1)",
             touchAction: "manipulation",
@@ -538,7 +538,7 @@ const ProjectModal = ({ project, onClose }) => {
           ← Back
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="pointer-events-auto flex items-center gap-2">
           {total > 0 && (
             <span
               className="text-xs md:text-sm text-white/70 px-3 py-1 rounded-full tabular-nums select-none"
@@ -553,7 +553,7 @@ const ProjectModal = ({ project, onClose }) => {
 
           <button
             onClick={onClose}
-            className="rounded-full bg-black/60 backdrop-blur-md px-3 py-1.5 md:py-2 text-base md:text-lg text-white/80 hover:text-white transition border active:scale-[0.95]"
+            className="pointer-events-auto rounded-full bg-black/60 backdrop-blur-md px-3 py-1.5 md:py-2 text-base md:text-lg text-white/80 hover:text-white transition border active:scale-[0.95]"
             style={{
               borderColor: "rgba(255,255,255,0.1)",
               touchAction: "manipulation",
@@ -565,11 +565,17 @@ const ProjectModal = ({ project, onClose }) => {
         </div>
       </div>
 
-      {/* Scroll container — NO data-lenis-prevent, native scroll works */}
+      {/* Scroll container */}
       <div
         ref={scrollRef}
-        className="w-full h-full overflow-y-auto overflow-x-hidden project-modal-scroll"
+        className="project-modal-scroll"
+        data-lenis-prevent
         style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          overflowY: "auto",
+          overflowX: "hidden",
           overscrollBehaviorY: "contain",
           WebkitOverflowScrolling: "touch",
         }}
@@ -919,6 +925,8 @@ const ProjectModal = ({ project, onClose }) => {
           className="fixed inset-0 z-[80] flex items-center justify-center"
           style={{ background: "rgba(4,4,4,0.97)", touchAction: "auto" }}
           onClick={closeLightbox}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
           aria-label={`${project.title} image fullscreen view`}
