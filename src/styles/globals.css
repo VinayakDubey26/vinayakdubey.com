@@ -212,12 +212,14 @@ main {
 }
 
 /* Keep scroll-driven work on the compositor — prevents layout thrash
-   under Lenis' RAF-driven scroll and makes transforms buttery. */
+   under Lenis' RAF-driven scroll and makes transforms buttery.
+   NOTE: Do NOT add .selected-work-section here — it has overflow:hidden
+   and contains the fixed-position ProjectModal. will-change:transform
+   creates a containing block that would trap the modal inside the section. */
 .skills-reveal,
 .skills-pin,
 .skill-cell,
-.hero,
-.selected-work-section {
+.hero {
   will-change: transform;
 }
 

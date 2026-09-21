@@ -1,4 +1,5 @@
 import { useState, useRef, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ProjectRow from "./ProjectRow";
@@ -91,14 +92,15 @@ const SelectedWork = () => {
         />
       </div>
 
-      {modalProject && (
+      {modalProject && createPortal(
         <ErrorBoundary fallback={null}>
           <ProjectModal
             key={modalProject?.id || "modal"}
             project={modalProject}
             onClose={() => setModalProject(null)}
           />
-        </ErrorBoundary>
+        </ErrorBoundary>,
+        document.body
       )}
     </section>
   );
