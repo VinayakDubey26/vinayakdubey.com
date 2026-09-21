@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { getProjectImage, isVideoFile } from "../data/projectsData";
 import { useLenisRef } from "../context/ScrollContext";
@@ -166,64 +166,7 @@ const ProjectModal = ({ project, onClose }) => {
     });
   }, [index, images]);
 
-  // Reveal detail sections on scroll — simple approach that always works.
-  // Uses a single timeout-based reveal so content is visible even if
-  // IntersectionObserver or Lenis scroll events are flaky.
-  useLayoutEffect(() => {
-    const scrollEl = scrollRef.current;
-    if (!scrollEl) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const revealEls = scrollEl.querySelectorAll("[data-reveal]");
-    if (revealEls.length === 0) return;
-
-    // Start hidden — will be revealed by observer or fallback timer.
-    gsap.set(revealEls, { y: 24, opacity: 0 });
-    gsap.set(scrollEl.querySelectorAll("[data-reveal-item]"), { y: 18, opacity: 0 });
-
-    const reveal = (el) => {
-      gsap.to(el, { y: 0, opacity: 1, duration: 0.9, ease: "expo.out" });
-      const items = el.querySelectorAll("[data-reveal-item]");
-      if (items.length) {
-        gsap.to(items, {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          ease: "expo.out",
-          stagger: 0.07,
-          delay: 0.1,
-        });
-      }
-    };
-
-    // IntersectionObserver — fires when section scrolls into the modal viewport.
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          observer.unobserve(entry.target);
-          reveal(entry.target);
-        });
-      },
-      { threshold: 0.05, root: scrollEl, rootMargin: "0px 0px 40px 0px" }
-    );
-
-    revealEls.forEach((el) => observer.observe(el));
-
-    // Safety fallback: reveal everything after 1.5s regardless, so the
-    // user always sees the content even if observer doesn't fire.
-    const fallback = setTimeout(() => {
-      revealEls.forEach((el) => {
-        observer.unobserve(el);
-        reveal(el);
-      });
-    }, 1500);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(fallback);
-    };
-  }, [project.id]);
 
   const animateTo = useCallback(
     (fromIdx, toIdx) => {
@@ -625,10 +568,9 @@ const ProjectModal = ({ project, onClose }) => {
       {/* Scroll container — NO data-lenis-prevent, native scroll works */}
       <div
         ref={scrollRef}
-        className="w-full h-full overflow-y-auto overflow-x-hidden"
+        className="w-full h-full overflow-y-auto overflow-x-hidden project-modal-scroll"
         style={{
           overscrollBehaviorY: "contain",
-          touchAction: "pan-y",
           WebkitOverflowScrolling: "touch",
         }}
       >
@@ -675,25 +617,12 @@ const ProjectModal = ({ project, onClose }) => {
                       }}
                     >
                       <div
-                        className="flex items-center justify-center overflow-hidden"
+                        className="w-full h-full flex items-center justify-center overflow-hidden"
                         style={{
-                          width: "min(94vw, 1500px)",
-                          height: "calc(100% - 32px)",
-                          padding: "16px",
+                          padding: "0",
                         }}
                       >
-                        <div
-                          className="w-full h-full flex items-center justify-center"
-                          style={{
-                            border: "1px solid rgba(255,255,255,0.06)",
-                            borderRadius: "8px",
-                            overflow: "hidden",
-                            boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
-                            background: "#0B0B0B",
-                          }}
-                        >
-                          {renderMedia(file, i)}
-                        </div>
+                        {renderMedia(file, i)}
                       </div>
                     </div>
                   ))}

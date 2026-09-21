@@ -45,6 +45,15 @@ html {
   scrollbar-gutter: stable;
 }
 
+.project-modal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.project-modal-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 body {
   margin: 0;
   overflow-x: clip;
