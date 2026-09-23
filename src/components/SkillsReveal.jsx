@@ -108,6 +108,15 @@ const SkillsReveal = () => {
           rafId = requestAnimationFrame(() => requestAnimationFrame(refresh));
         };
 
+        const revealAll = () => {
+          setVisibleGroups(skillGroups.length);
+          if (introTextEl) introTextEl.textContent = fullIntro;
+          if (cursorEl) cursorEl.style.opacity = "0";
+          if (sectionEl) sectionEl.style.backgroundColor = bgFromProgress(1);
+          const cells = sectionRef.current?.querySelectorAll(".skill-cell");
+          if (cells) gsap.to(cells, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.4, overwrite: true });
+        };
+
         ScrollTrigger.create({
           trigger: introRef.current,
           start: TYPING_PARA,
@@ -129,21 +138,46 @@ const SkillsReveal = () => {
             if (introTextEl) introTextEl.textContent = fullIntro.slice(0, visibleChars);
             if (cursorEl) cursorEl.style.opacity = visibleChars < fullIntro.length ? "1" : "0";
           },
-          onRefresh: scheduleRefresh,
+          onLeave: () => {
+            if (introTextEl) introTextEl.textContent = fullIntro;
+            if (cursorEl) cursorEl.style.opacity = "0";
+          },
+          onRefresh: (self) => {
+            if (self.progress >= 1) {
+              if (introTextEl) introTextEl.textContent = fullIntro;
+              if (cursorEl) cursorEl.style.opacity = "0";
+            }
+          },
+          onRefreshInit: scheduleRefresh,
         });
 
         const cells = sectionRef.current.querySelectorAll(".skill-cell");
         gsap.set(cells, { opacity: 0, filter: "blur(10px)", y: 12 });
         cells.forEach((cell, i) => {
+          const revealCell = () => {
+            setVisibleGroups((prev) => Math.max(prev, i + 1));
+            gsap.to(cell, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.45, ease: "power3.out", overwrite: true });
+          };
+
           ScrollTrigger.create({
             trigger: cell,
-            start: SKILL_ENTER,
+            start: "top 96%",
             once: true,
-            onEnter: () => {
-              setVisibleGroups((prev) => Math.max(prev, i + 1));
-              gsap.to(cell, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.5, ease: "power3.out", overwrite: true });
+            onEnter: revealCell,
+            onRefresh: (self) => {
+              if (self.progress > 0 || cell.getBoundingClientRect().top < window.innerHeight * 0.96) {
+                revealCell();
+              }
             },
           });
+        });
+
+        // Fail-safe section trigger: when scrolled past the section on mobile, guarantee full visibility
+        ScrollTrigger.create({
+          trigger: sectionRef.current,
+          start: "bottom top",
+          onEnter: revealAll,
+          onLeaveBack: revealAll,
         });
 
         scheduleRefresh();

@@ -367,16 +367,16 @@ const ProjectModal = ({ project, onClose }) => {
               const url = getProjectImage(project.folder, file);
               return (
                 <div key={file} ref={(el) => (mediaRefs.current[i] = el)}
-                  className="absolute inset-0 flex items-center justify-center p-2"
+                  className="absolute inset-0 flex items-center justify-center p-0"
                   style={{ opacity: i === 0 ? 1 : 0, pointerEvents: i === 0 ? "auto" : "none" }}>
-                  <div style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: "8px", overflow: "hidden", background: "#0B0B0B", boxShadow: "0 8px 40px rgba(0,0,0,0.4)" }}>
+                  <div className="w-full h-full overflow-hidden flex items-center justify-center bg-[#0B0B0B]">
                     {isVideoFile(file) ? (
                       <video src={url} muted playsInline loop preload="metadata"
-                        style={{ maxHeight: "calc(100svh - 250px)", maxWidth: "100%", width: "auto", height: "auto", objectFit: "contain", objectPosition: "center" }}
+                        style={{ maxWidth: "100%", maxHeight: "100%", width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }}
                         aria-label={`${project.title} video ${i + 1}`} />
                     ) : (
                       <img src={url} alt={`${project.title} screenshot ${i + 1}`}
-                        style={{ maxHeight: "calc(100svh - 250px)", maxWidth: "100%", width: "auto", height: "auto", objectFit: "contain", objectPosition: "center" }}
+                        style={{ maxWidth: "100%", maxHeight: "100%", width: "100%", height: "100%", objectFit: "contain", objectPosition: "center" }}
                         draggable={false} />
                     )}
                   </div>
@@ -962,9 +962,9 @@ const ProjectModal = ({ project, onClose }) => {
           <img
             src={getProjectImage(project.folder, images[lightboxIndex])}
             alt={`${project.title} screenshot ${lightboxIndex + 1} fullscreen`}
-            className="max-w-full max-h-full w-auto h-auto object-contain select-none"
+            className="max-w-full max-h-full w-auto h-auto object-contain select-none p-0"
             draggable={false}
-            style={{ touchAction: "auto", maxWidth: "calc(100vw - 16px)", maxHeight: "calc(100svh - 88px)" }}
+            style={{ touchAction: "auto", maxWidth: "100vw", maxHeight: "100svh" }}
             onClick={(e) => e.stopPropagation()}
           />
 
