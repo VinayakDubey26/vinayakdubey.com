@@ -154,18 +154,18 @@ main {
 
 .skill-cell {
   position: relative;
-  padding: clamp(18px, 3vw, 24px);
+  padding: clamp(20px, 3.5vw, 28px);
   border: none;
-  border-radius: 16px;
-  background: #0a0a0c;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border-radius: 18px;
+  background: #0b0b0e;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
   overflow: hidden;
 }
 
 .skill-cell:hover {
   transform: translateY(-2px);
-  background: #0f0f12;
-  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
+  background: #111116;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.55);
 }
 
 @keyframes cursor-blink {

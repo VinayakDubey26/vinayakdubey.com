@@ -40,11 +40,11 @@ function SkillBadge({ name }) {
   const iconData = SKILL_ICONS[name];
 
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.05] px-2.5 py-1.5 text-xs font-medium text-white/85 transition-colors hover:bg-white/[0.1] hover:text-white select-none">
+    <span className="inline-flex items-center gap-2 rounded-xl bg-white/[0.06] px-3 py-2 text-xs md:text-sm font-medium text-white/90 transition-all duration-200 hover:bg-white/[0.12] hover:text-white hover:scale-[1.02] select-none">
       {iconData && (
         <svg
           viewBox="0 0 24 24"
-          className="h-3.5 w-3.5 shrink-0"
+          className="h-4.5 w-4.5 md:h-5 md:w-5 shrink-0"
           fill={iconData.color || "currentColor"}
           aria-hidden="true"
         >
@@ -164,7 +164,7 @@ const SkillsReveal = () => {
           style={{ transform: "translate(-50%, -50%) scale(0)" }}
           aria-hidden="true"
         />
-        <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
+        <div className="skills-content font-space relative z-[2] w-full max-w-[1450px] p-[clamp(20px,4vw,64px)] text-[#f5f5f7]">
           <div className="mb-4 flex items-center justify-start md:mb-6">
             <span className="skill-pill inline-flex items-center gap-2 rounded-full bg-[#121214] px-3.5 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.16em] text-[#f5f5f0]/90 md:text-[0.68rem]">
               <span className="h-1.5 w-1.5 rounded-full bg-[#d8d8d2]" aria-hidden="true" />
@@ -172,12 +172,12 @@ const SkillsReveal = () => {
             </span>
           </div>
 
-          <p ref={introRef} className="intro-copy mb-[clamp(20px,4vh,48px)] max-w-[980px] whitespace-pre-wrap text-[clamp(1.5rem,5vw,3.6rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#f8f8f4]">
+          <p ref={introRef} className="intro-copy mb-[clamp(24px,5vh,56px)] max-w-[1100px] whitespace-pre-wrap text-[clamp(1.6rem,5vw,3.8rem)] font-medium leading-[1.05] tracking-[-0.04em] text-[#f8f8f4]">
             <span ref={introTextRef}>{fullIntro}</span>
             <span ref={cursorRef} className="type-cursor" style={{ opacity: animationReady ? 0 : 1 }}>|</span>
           </p>
 
-          <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[24px] md:gap-y-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-[20px] gap-y-5 md:gap-x-[28px] md:gap-y-6 md:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((group, idx) => {
               const isVisible = !animationReady || idx < visibleGroups;
               return (
@@ -192,8 +192,8 @@ const SkillsReveal = () => {
                     animationDelay: `${idx * 100}ms`,
                   }}
                 >
-                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">{group.title}</h3>
-                  <div className="flex flex-wrap gap-2">
+                  <h3 className="mb-3.5 text-xs md:text-sm font-semibold uppercase tracking-widest text-white/50">{group.title}</h3>
+                  <div className="flex flex-wrap gap-2.5">
                     {group.items.map((item) => (
                       <SkillBadge key={item} name={item} />
                     ))}
