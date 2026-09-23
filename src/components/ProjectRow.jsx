@@ -105,6 +105,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       s.isDown = true;
       s.startX = e.pageX;
       s.startY = e.pageY;
+      s.lastX = e.pageX;
       s.scrollLeft = el.scrollLeft;
       s.moved = false;
       s.locked = false;
@@ -142,7 +143,8 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       const walk = dx;
       if (Math.abs(walk) > 3) s.moved = true;
       el.scrollLeft = s.scrollLeft - walk;
-      s.vel = Math.max(-80, Math.min(80, walk));
+      s.vel = -(e.pageX - s.lastX);
+      s.lastX = e.pageX;
       dragRef.current = s.moved;
       updateProgress();
       if (watchdog) { clearTimeout(watchdog); watchdog = setTimeout(resetDragState, 3000); }
@@ -160,8 +162,8 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       }
 
       // Momentum fling for horizontal drag
-      const decay = 0.96;
-      let v = Math.max(-80, Math.min(80, s.vel));
+      const decay = 0.94;
+      let v = Math.max(-30, Math.min(30, s.vel));
 
       const step = () => {
         if (Math.abs(v) < 0.3) { s.raf = null; resetDragState(); return; }
