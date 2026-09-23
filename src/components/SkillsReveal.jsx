@@ -1,18 +1,60 @@
-﻿import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SKILL_ICONS } from "../data/skillIcons";
 
 const fullIntro = `I am a Full-Stack Developer & Software Engineer.\n\nI build business software, ecommerce websites, AI-powered tools, and operational systems.`;
 
 const skillGroups = [
-  { title: "Frontend", text: "React • JavaScript • HTML • CSS • GSAP • Responsive Design" },
-  { title: "Backend", text: "Node.js • Express.js • REST APIs • JWT • OAuth" },
-  { title: "Databases", text: "SQLite • PostgreSQL • MySQL • MongoDB • Database Design" },
-  { title: "Cloud & Infrastructure", text: "AWS • EC2 • S3 • RDS • Deployment • Security" },
-  { title: "AI Engineering", text: "GPT • Claude • Gemini • RAG • MCP • AI Agents • Embeddings" },
-  { title: "Automation", text: "n8n • Zapier • WhatsApp APIs • Email APIs" },
-  { title: "Architecture", text: "System Design • Cloud Architecture • AI Architecture • Database Architecture" },
+  {
+    title: "Frontend",
+    items: ["React", "JavaScript", "HTML", "CSS", "GSAP", "Responsive Design"],
+  },
+  {
+    title: "Backend",
+    items: ["Node.js", "Express.js", "REST APIs", "JWT", "OAuth"],
+  },
+  {
+    title: "Databases",
+    items: ["SQLite", "PostgreSQL", "MySQL", "MongoDB", "Database Design"],
+  },
+  {
+    title: "Cloud & Infrastructure",
+    items: ["AWS", "EC2", "S3", "RDS", "Deployment", "Security"],
+  },
+  {
+    title: "AI Engineering",
+    items: ["GPT", "Claude", "Gemini", "RAG", "MCP", "AI Agents", "Embeddings"],
+  },
+  {
+    title: "Automation",
+    items: ["n8n", "Zapier", "WhatsApp APIs", "Email APIs"],
+  },
+  {
+    title: "Architecture",
+    items: ["System Design", "Cloud Architecture", "AI Architecture", "Database Architecture"],
+  },
 ];
+
+function SkillBadge({ name }) {
+  const iconData = SKILL_ICONS[name];
+
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-lg bg-white/[0.05] px-2.5 py-1.5 text-xs font-medium text-white/85 transition-colors hover:bg-white/[0.1] hover:text-white select-none">
+      {iconData && (
+        <svg
+          viewBox="0 0 24 24"
+          className="h-3.5 w-3.5 shrink-0"
+          fill={iconData.color || "currentColor"}
+          aria-hidden="true"
+        >
+          <path d={iconData.path} />
+        </svg>
+      )}
+      <span>{name}</span>
+    </span>
+  );
+}
 
 const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 const mix = (a, b, t) => Math.round(a + (b - a) * t);
@@ -22,13 +64,6 @@ const smoothstep = (t) => {
 };
 const bgFromProgress = (t) => `rgb(${mix(245, 5, t)} ${mix(245, 5, t)} ${mix(240, 5, t)})`;
 
-// All reveals are anchored to the content itself, not the section's top
-// edge, so every text block appears as soon as its own part is scrolled into
-// view on desktop and mobile alike:
-//  - The background darkens and the intro types while the paragraph's top
-//    travels from the bottom of the viewport to mid-screen (one consistent
-//    window per device).
-//  - Each skill group unhides when its own card first enters the screen.
 const FADE_IN_END = 1;
 const DROP_END = 0.55;
 const TYPING_PARA = "top bottom";
@@ -56,7 +91,6 @@ const SkillsReveal = () => {
         setAnimationReady(true);
         setVisibleGroups(0);
 
-        // Direct DOM writes for per-frame values: avoids 60fps React re-renders.
         const sectionEl = sectionRef.current;
         const introTextEl = introTextRef.current;
         const dropEl = dropRef.current;
@@ -67,7 +101,6 @@ const SkillsReveal = () => {
         if (dropEl) dropEl.style.transform = "translate(-50%, -50%) scale(0)";
         if (cursorEl) cursorEl.style.opacity = "1";
 
-        // Keep ScrollTrigger measurements valid after fonts/images settle.
         const refresh = () => ScrollTrigger.refresh();
         let rafId = 0;
         const scheduleRefresh = () => {
@@ -99,9 +132,7 @@ const SkillsReveal = () => {
           onRefresh: scheduleRefresh,
         });
 
-        // Reveal each skill group as its own card enters the viewport.
         const cells = sectionRef.current.querySelectorAll(".skill-cell");
-        // Ensure initial hidden state is set before ScrollTrigger measures.
         gsap.set(cells, { opacity: 0, filter: "blur(10px)", y: 12 });
         cells.forEach((cell, i) => {
           ScrollTrigger.create({
@@ -115,14 +146,12 @@ const SkillsReveal = () => {
           });
         });
 
-        // One extra refresh after setup so start/end positions account for
-        // the freshly-applied GSAP initial states and current scroll pos.
         scheduleRefresh();
       }, sectionRef);
 
       return () => ctx.revert();
     } catch {
-      // Fallback: keep initial state
+      // Fallback
     }
   }, []);
 
@@ -137,8 +166,8 @@ const SkillsReveal = () => {
         />
         <div className="skills-content font-space relative z-[2] w-full max-w-[1150px] p-[clamp(20px,5vw,64px)] text-[#f5f5f7]">
           <div className="mb-4 flex items-center justify-start md:mb-6">
-            <span className="skill-pill inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.16em] text-[#f5f5f0]/90 backdrop-blur-sm md:text-[0.68rem]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#d8d8d2] shadow-[0_0_12px_rgba(216,216,210,0.9)]" aria-hidden="true" />
+            <span className="skill-pill inline-flex items-center gap-2 rounded-full bg-[#121214] px-3.5 py-1.5 text-[0.62rem] font-medium uppercase tracking-[0.16em] text-[#f5f5f0]/90 md:text-[0.68rem]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#d8d8d2]" aria-hidden="true" />
               What I build
             </span>
           </div>
@@ -148,7 +177,7 @@ const SkillsReveal = () => {
             <span ref={cursorRef} className="type-cursor" style={{ opacity: animationReady ? 0 : 1 }}>|</span>
           </p>
 
-          <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[42px] md:gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-[18px] gap-y-4 md:gap-x-[24px] md:gap-y-5 md:grid-cols-2 lg:grid-cols-3">
             {skillGroups.map((group, idx) => {
               const isVisible = !animationReady || idx < visibleGroups;
               return (
@@ -163,8 +192,12 @@ const SkillsReveal = () => {
                     animationDelay: `${idx * 100}ms`,
                   }}
                 >
-                  <h3 className="mb-2 text-[clamp(0.94rem,1.1vw,1.15rem)] font-semibold tracking-[0.06em] text-[#f8f8f4]">{group.title}</h3>
-                  <p className="text-[clamp(0.82rem,0.93vw,1rem)] leading-[1.55] text-[#e7e7e1]">{group.text}</p>
+                  <h3 className="mb-3 text-xs font-semibold uppercase tracking-widest text-white/40">{group.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {group.items.map((item) => (
+                      <SkillBadge key={item} name={item} />
+                    ))}
+                  </div>
                 </article>
               );
             })}

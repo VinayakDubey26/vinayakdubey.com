@@ -87,25 +87,33 @@ const ServicesSection = () => {
 
         <div
           data-services-reveal
-          className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-14"
+          className="mt-12 lg:mt-16 border-t border-white/10 divide-y divide-white/10 max-w-[1200px]"
         >
-          {SERVICES.map((service) => (
+          {SERVICES.map((service, idx) => (
             <a
               key={service.name}
               href="#contact"
-              className="group flex min-h-[88px] items-center gap-4 rounded-xl border border-white/10 bg-white/4 px-4 py-3 transition-all duration-200 hover:border-white/25 hover:bg-white/8"
+              className="group py-6 md:py-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors duration-300 hover:bg-white/[0.02] px-2 -mx-2 rounded-lg"
             >
-              <span>
-                <span className="block text-sm font-semibold text-white/80 group-hover:text-white">
-                  {service.name}
+              <div className="flex items-baseline gap-4 sm:gap-8">
+                <span className="text-xs font-mono font-semibold tracking-widest text-white/30">
+                  {String(idx + 1).padStart(2, "0")}
                 </span>
-                <span className="mt-1 block text-xs text-white/35">
-                  {service.label}
+                <div>
+                  <h3 className="text-xl md:text-2xl font-semibold text-white/90 group-hover:text-white transition-colors duration-200">
+                    {service.name}
+                  </h3>
+                  <p className="mt-1 text-xs md:text-sm text-white/45 group-hover:text-white/60 transition-colors duration-200">
+                    {service.label}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-widest text-white/40 group-hover:text-white transition-colors duration-200 self-end sm:self-center">
+                <span>Start Project</span>
+                <span className="transition-transform duration-200 group-hover:translate-x-1">
+                  →
                 </span>
-              </span>
-              <span className="ml-auto text-white/35 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-white/70">
-                →
-              </span>
+              </div>
             </a>
           ))}
         </div>
