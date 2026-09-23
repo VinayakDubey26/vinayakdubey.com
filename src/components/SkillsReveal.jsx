@@ -85,17 +85,54 @@ const SkillsReveal = () => {
     if (!sectionRef.current) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+    const isMobile = window.matchMedia("(max-width: 767px)").matches;
+
     try {
       gsap.registerPlugin(ScrollTrigger);
       const ctx = gsap.context(() => {
         setAnimationReady(true);
-        setVisibleGroups(0);
 
         const sectionEl = sectionRef.current;
         const introTextEl = introTextRef.current;
         const dropEl = dropRef.current;
         const cursorEl = cursorRef.current;
+        const cells = sectionRef.current.querySelectorAll(".skill-cell");
 
+        if (isMobile) {
+          // On mobile: reveal text immediately & animate cards as soon as section enters view
+          if (sectionEl) sectionEl.style.backgroundColor = "rgb(5 5 5)";
+          if (introTextEl) introTextEl.textContent = fullIntro;
+          if (cursorEl) cursorEl.style.opacity = "0";
+          if (dropEl) dropEl.style.transform = "translate(-50%, -50%) scale(48)";
+          setVisibleGroups(skillGroups.length);
+
+          gsap.set(cells, { opacity: 0, y: 24, filter: "blur(0px)" });
+
+          ScrollTrigger.create({
+            trigger: sectionRef.current,
+            start: "top 85%",
+            once: true,
+            onEnter: () => {
+              gsap.to(cells, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                stagger: 0.08,
+                ease: "power3.out",
+                overwrite: true,
+              });
+            },
+            onRefresh: (self) => {
+              if (self.progress > 0 || sectionRef.current?.getBoundingClientRect().top < window.innerHeight) {
+                gsap.to(cells, { opacity: 1, y: 0, duration: 0.4, overwrite: true });
+              }
+            },
+          });
+          return;
+        }
+
+        // Desktop: smooth scrubbed intro & staggered card reveals
+        setVisibleGroups(0);
         if (sectionEl) sectionEl.style.backgroundColor = "#f5f5f0";
         if (introTextEl) introTextEl.textContent = "";
         if (dropEl) dropEl.style.transform = "translate(-50%, -50%) scale(0)";
@@ -113,7 +150,6 @@ const SkillsReveal = () => {
           if (introTextEl) introTextEl.textContent = fullIntro;
           if (cursorEl) cursorEl.style.opacity = "0";
           if (sectionEl) sectionEl.style.backgroundColor = bgFromProgress(1);
-          const cells = sectionRef.current?.querySelectorAll(".skill-cell");
           if (cells) gsap.to(cells, { opacity: 1, filter: "blur(0px)", y: 0, duration: 0.4, overwrite: true });
         };
 
@@ -151,7 +187,6 @@ const SkillsReveal = () => {
           onRefreshInit: scheduleRefresh,
         });
 
-        const cells = sectionRef.current.querySelectorAll(".skill-cell");
         gsap.set(cells, { opacity: 0, filter: "blur(10px)", y: 12 });
         cells.forEach((cell, i) => {
           const revealCell = () => {
@@ -172,7 +207,6 @@ const SkillsReveal = () => {
           });
         });
 
-        // Fail-safe section trigger: when scrolled past the section on mobile, guarantee full visibility
         ScrollTrigger.create({
           trigger: sectionRef.current,
           start: "bottom top",

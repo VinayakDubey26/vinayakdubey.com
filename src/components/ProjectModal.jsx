@@ -344,10 +344,37 @@ const ProjectModal = ({ project, onClose }) => {
         }
         .split-media-col .thumb-strip::-webkit-scrollbar { display: none; }
         @media (max-width: 767px) {
-          .mobile-split-grid { display: block; padding: 0 12px; }
-          .split-media-col { position: static !important; height: auto !important; padding-top: 16px; }
-          .split-media-stage { height: min(56svh, 400px) !important; flex: none !important; flex-shrink: 0 !important; }
-          .split-media-stage img, .split-media-stage video { max-height: calc(min(56svh, 400px) - 16px) !important; }
+          .project-modal-scroll {
+            padding-top: 48px !important;
+          }
+          .mobile-split-grid {
+            display: block !important;
+            padding: 0 16px !important;
+          }
+          .split-media-col {
+            position: static !important;
+            height: auto !important;
+            padding-top: 0 !important;
+          }
+          .split-media-stage, .pm-gallery {
+            height: auto !important;
+            max-height: 42svh !important;
+            min-height: 220px !important;
+            aspect-ratio: 16 / 10 !important;
+            flex: none !important;
+            flex-shrink: 0 !important;
+            margin-top: 0 !important;
+          }
+          .split-media-stage img, .split-media-stage video, .pm-gallery img, .pm-gallery video {
+            max-height: 100% !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: contain !important;
+          }
+          .split-content-col {
+            padding-top: 12px !important;
+          }
         }
       `}</style>
       <div className="mobile-split-grid">
@@ -774,7 +801,7 @@ const ProjectModal = ({ project, onClose }) => {
                 paddingBottom: "calc(4rem + env(safe-area-inset-bottom, 0px))",
               }}
             >
-              <div className="px-5 md:px-10 py-8 md:py-12 max-w-[1200px] mx-auto">
+              <div className="px-5 md:px-10 py-4 md:py-12 max-w-[1200px] mx-auto">
                 <div ref={headerRef}>
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-12">
                     <div className="flex-1 min-w-0">
