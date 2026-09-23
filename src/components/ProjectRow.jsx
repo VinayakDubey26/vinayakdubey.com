@@ -232,6 +232,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
       <div
         ref={scrollRef}
         className="flex gap-4 md:gap-5 overflow-x-auto px-6 md:px-10 pb-2 select-none scroll-row"
+        data-lenis-prevent
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
