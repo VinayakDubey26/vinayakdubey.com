@@ -94,6 +94,7 @@ const ProjectModal = ({ project, onClose }) => {
   const dragState = useRef({ isDown: false, startX: 0, moved: false });
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const lightboxRef = useRef(null);
+  const lbDragState = useRef({ startX: 0, moved: false });
 
   const headerRef = useRef(null);
   const techStackRef = useRef(null);
@@ -255,9 +256,14 @@ const ProjectModal = ({ project, onClose }) => {
   }, [onClose, goNext, goPrev, closeLightbox, total]);
 
   const handlePointerDown = (e) => {
+    if (e.target.closest("button")) return;
     dragState.current.isDown = true;
     dragState.current.startX = e.clientX;
     dragState.current.moved = false;
+    // Capture the pointer so move/up events fire even if finger drifts off element
+    if (e.target.setPointerCapture) {
+      try { e.target.setPointerCapture(e.pointerId); } catch {}
+    }
   };
 
   const handlePointerMove = (e) => {
@@ -270,8 +276,11 @@ const ProjectModal = ({ project, onClose }) => {
     if (!dragState.current.isDown) return;
     const diff = e.clientX - dragState.current.startX;
     dragState.current.isDown = false;
+    if (e.target.releasePointerCapture) {
+      try { e.target.releasePointerCapture(e.pointerId); } catch {}
+    }
     if (!dragState.current.moved) return;
-    if (Math.abs(diff) > 50) {
+    if (Math.abs(diff) > 30) {
       if (diff > 0) goPrev();
       else goNext();
     }
@@ -344,7 +353,7 @@ const ProjectModal = ({ project, onClose }) => {
       <div className="mobile-split-grid">
         <div className="split-media-col">
           <div className="split-media-stage relative w-full flex-1 flex items-center justify-center overflow-hidden select-none rounded-xl"
-            style={{ minHeight: 0, background: "#0B0B0B" }}
+            style={{ minHeight: 0, background: "#0B0B0B", touchAction: "pan-y" }}
             onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp} onPointerLeave={() => { dragState.current.isDown = false; }}
             onClick={(e) => {
@@ -589,6 +598,7 @@ const ProjectModal = ({ project, onClose }) => {
               style={{
                 height: "min(68svh, 620px)",
                 minHeight: "320px",
+                touchAction: "pan-y",
               }}
               onPointerDown={handlePointerDown}
               onPointerMove={handlePointerMove}
@@ -923,8 +933,17 @@ const ProjectModal = ({ project, onClose }) => {
       {lightboxIndex !== null && (
         <div
           className="fixed inset-0 z-[80] flex items-center justify-center"
-          style={{ background: "rgba(4,4,4,0.97)", touchAction: "auto" }}
-          onClick={closeLightbox}
+          style={{ background: "rgba(4,4,4,0.97)", touchAction: "pan-y" }}
+          onClick={(e) => { if (!lbDragState.current.moved) closeLightbox(); }}
+          onPointerDown={(e) => { lbDragState.current.startX = e.clientX; lbDragState.current.moved = false; }}
+          onPointerMove={(e) => { if (Math.abs(e.clientX - lbDragState.current.startX) > 10) lbDragState.current.moved = true; }}
+          onPointerUp={(e) => {
+            const diff = e.clientX - lbDragState.current.startX;
+            if (lbDragState.current.moved && Math.abs(diff) > 30 && total > 1) {
+              if (diff > 0) setLightboxIndex((i) => (i - 1 + total) % total);
+              else setLightboxIndex((i) => (i + 1) % total);
+            }
+          }}
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
           role="dialog"

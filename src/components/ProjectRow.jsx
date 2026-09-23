@@ -238,7 +238,7 @@ const ProjectRow = ({ title, projects, onViewDetails }) => {
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",
-          touchAction: "pan-y",
+          touchAction: "pan-x pan-y",
           WebkitOverflowScrolling: "touch",
           cursor: "grab",
         }}

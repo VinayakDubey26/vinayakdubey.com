@@ -48,10 +48,12 @@ const SelectedWork = () => {
     >
       {/* Neighbor dimming */}
       <style>{`
-        .scroll-row:hover .card-item:not(:hover) {
-          opacity: 0.5;
-          filter: brightness(0.6);
-          transition: opacity 0.4s ease, filter 0.4s ease;
+        @media (hover: hover) {
+          .scroll-row:hover .card-item:not(:hover) {
+            opacity: 0.5;
+            filter: brightness(0.6);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+          }
         }
       `}</style>
 
