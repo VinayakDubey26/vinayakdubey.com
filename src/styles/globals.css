@@ -97,11 +97,11 @@ section[id] { scroll-margin-top: 1.5rem; }
 .hero-socials a, .scroll-cue { color: var(--muted); font-family: var(--mono); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; transition: color 180ms ease; }
 .hero-socials a { display: inline-flex; min-height: 2rem; align-items: center; gap: 0.45rem; }
 .hero-socials a:hover, .scroll-cue:hover { color: var(--cobalt-dark); }
-.hero-socials__icon { display: inline-grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 0.35rem; background: var(--social-color); color: var(--white); font-family: var(--mono); font-size: 0.56rem; font-weight: 500; letter-spacing: -0.06em; line-height: 1; }
+.hero-socials__icon { display: block; width: 1.45rem; height: 1.45rem; padding: 0.28rem; border-radius: 0.35rem; background: var(--social-color); color: var(--white); }
+.hero-socials__icon path { fill: currentColor; }
 .hero-socials__link--github { --social-color: var(--ink); }
 .hero-socials__link--linkedin { --social-color: #0a66c2; }
 .hero-socials__link--whatsapp { --social-color: #25d366; }
-.hero-socials__link--whatsapp .hero-socials__icon { color: var(--ink); }
 .scroll-cue { display: inline-flex; align-items: center; gap: 0.7rem; }
 .scroll-cue span { color: var(--cobalt); font-size: 1rem; }
 .reveal-item { opacity: 0; transform: translateY(1.25rem); }
