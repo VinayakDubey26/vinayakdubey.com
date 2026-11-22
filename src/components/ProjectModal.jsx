@@ -93,6 +93,8 @@ const ProjectModal = ({ project, onClose }) => {
   const dragState = useRef({ isDown: false, startX: 0, moved: false });
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const lightboxRef = useRef(null);
+  const lightboxCloseRef = useRef(null);
+  const previousFocusRef = useRef(null);
   const lbDragState = useRef({ startX: 0, moved: false });
 
   const headerRef = useRef(null);
@@ -106,6 +108,18 @@ const ProjectModal = ({ project, onClose }) => {
     lightboxRef.current = lightboxIndex;
   }, [lightboxIndex]);
 
+  useEffect(() => {
+    if (lightboxIndex === null) {
+      previousFocusRef.current?.focus?.();
+      previousFocusRef.current = null;
+      return undefined;
+    }
+
+    if (!previousFocusRef.current) previousFocusRef.current = document.activeElement;
+    const frame = requestAnimationFrame(() => lightboxCloseRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [lightboxIndex]);
+
   const closeLightbox = useCallback(() => {
     if (lightboxRef.current !== null && lightboxRef.current !== indexRef.current) {
       setIndex(lightboxRef.current);
@@ -113,9 +127,10 @@ const ProjectModal = ({ project, onClose }) => {
     setLightboxIndex(null);
   }, []);
 
-  const openLightbox = (i) => {
+  const openLightbox = (i, trigger) => {
     if (i == null) return;
     if (isVideoFile(images[i])) return;
+    previousFocusRef.current = trigger || document.activeElement;
     setLightboxIndex(i);
   };
 
@@ -382,7 +397,7 @@ const ProjectModal = ({ project, onClose }) => {
             onPointerUp={handlePointerUp} onPointerLeave={() => { dragState.current.isDown = false; }}
             onClick={(e) => {
               if (dragState.current.moved || e.target.closest("button")) return;
-              openLightbox(index);
+              openLightbox(index, e.currentTarget);
             }}
             title="Tap to view fullscreen">
             <div className="absolute inset-0 pointer-events-none"
@@ -630,7 +645,7 @@ const ProjectModal = ({ project, onClose }) => {
               onPointerLeave={() => { dragState.current.isDown = false; }}
               onClick={(e) => {
                 if (dragState.current.moved || e.target.closest("button")) return;
-                openLightbox(index);
+                openLightbox(index, e.currentTarget);
               }}
               title="Tap to view fullscreen"
             >
@@ -747,7 +762,7 @@ const ProjectModal = ({ project, onClose }) => {
                           <span className="text-white/30 text-xs">▶</span>
                         </div>
                       ) : (
-                        <img src={url} alt="" className="w-full h-full object-cover" draggable={false} />
+                        <img src={url} alt="" className="w-full h-full object-contain bg-[#161616]" draggable={false} />
                       )}
                     </button>
                   );
@@ -976,6 +991,7 @@ const ProjectModal = ({ project, onClose }) => {
         >
           <button
             onClick={closeLightbox}
+            ref={lightboxCloseRef}
             aria-label="Close fullscreen view"
             className="absolute top-0 right-0 z-10 flex items-center justify-center text-white/70 hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             style={{ width: "52px", height: "52px", background: "transparent", border: "none", fontSize: "28px", touchAction: "manipulation", paddingTop: "env(safe-area-inset-top, 8px)" }}
