@@ -4,7 +4,6 @@ import SiteNav from "./components/SiteNav";
 import EditorialHero from "./components/EditorialHero";
 import EditorialWork from "./components/EditorialWork";
 import EditorialServices from "./components/EditorialServices";
-import ExpertiseSection from "./components/ExpertiseSection";
 import AboutSection from "./components/AboutSection";
 import ContactSection from "./components/ContactSection";
 
@@ -18,7 +17,6 @@ function App() {
         <EditorialHero />
         <EditorialWork />
         <EditorialServices />
-        <ExpertiseSection />
         <AboutSection />
         <ContactSection />
       </main>

@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from "react";
 const LINKS = [
   { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
-  { href: "#expertise", label: "Expertise" },
   { href: "#about", label: "About" },
+  { href: "#contact", label: "Contact" },
 ];
 
 const SiteNav = () => {
