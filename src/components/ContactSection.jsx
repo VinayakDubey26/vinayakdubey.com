@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 const DIRECT_LINKS = [
-  { name: "Email", href: "mailto:hello@vinayakdubey.com", label: "hello@vinayakdubey.com" },
   { name: "WhatsApp", href: "https://wa.me/917021533178", label: "Chat directly" },
   { name: "LinkedIn", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/", label: "Connect professionally" },
   { name: "GitHub", href: "https://github.com/VinayakDubey26", label: "See the code" },
@@ -29,7 +28,7 @@ const ContactSection = () => {
           </form>
         </div></div>
       </section>
-      <footer className="site-footer"><div className="page-width site-footer__inner"><a className="site-nav__brand" href="#top"><span className="site-nav__mark" aria-hidden="true">VD</span><span>Vinayak Dubey</span></a><p>Full-stack developer &amp; software engineer</p><a href="mailto:hello@vinayakdubey.com">hello@vinayakdubey.com</a><span>© {new Date().getFullYear()} Vinayak Dubey</span></div></footer>
+      <footer className="site-footer"><div className="page-width site-footer__inner"><a className="site-nav__brand" href="#top"><span className="site-nav__mark" aria-hidden="true">VD</span><span>Vinayak Dubey</span></a><p>Full-stack developer &amp; software engineer</p><span>© {new Date().getFullYear()} Vinayak Dubey</span></div></footer>
     </>
   );
 };
