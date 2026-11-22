@@ -1,243 +1,35 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ResumeLink from "./ResumeLink";
-
-gsap.registerPlugin(ScrollTrigger);
+import { useState } from "react";
 
 const DIRECT_LINKS = [
-  { name: "WhatsApp", href: "https://wa.me/917021533178", label: "Chat on WhatsApp" },
   { name: "Email", href: "mailto:hello@vinayakdubey.com", label: "hello@vinayakdubey.com" },
-  { name: "LinkedIn", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/", label: "Connect on LinkedIn" },
-  { name: "GitHub", href: "https://github.com/VinayakDubey26", label: "View on GitHub" },
+  { name: "WhatsApp", href: "https://wa.me/917021533178", label: "Chat directly" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/", label: "Connect professionally" },
+  { name: "GitHub", href: "https://github.com/VinayakDubey26", label: "See the code" },
 ];
 
-const inputClasses =
-  "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-[#f5f5f7] placeholder:text-white/30 transition-colors duration-200 focus:outline-none focus:border-white/30 focus:bg-white/8";
-
-const PROJECT_TYPES = [
-  "Business Software",
-  "Mobile App",
-  "Ecommerce Website",
-  "Business Website",
-  "Operational System",
-  "Something Else",
-];
+const PROJECT_TYPES = ["Business software", "Mobile app", "Ecommerce website", "Business website", "Operational system", "Something else"];
+const inputClass = "contact-input";
 
 const ContactSection = () => {
-  const sectionRef = useRef(null);
   const [status, setStatus] = useState("idle");
   const [projectType, setProjectType] = useState("");
 
-  useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const ctx = gsap.context(() => {
-      gsap.set("[data-contact-reveal]", { y: 28, opacity: 0 });
-      gsap.to("[data-contact-reveal]", {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 82%",
-          once: true,
-          invalidateOnRefresh: true,
-        },
-      });
-      requestAnimationFrame(() => requestAnimationFrame(() => ScrollTrigger.refresh()));
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const handleSubmit = () => {
-    setStatus("submitting");
-  };
-
   return (
-    <section
-      ref={sectionRef}
-      id="contact"
-      className="relative overflow-hidden bg-[#050505] py-16 md:py-24 lg:py-32 text-[#f5f5f7]"
-      aria-label="Contact"
-    >
-      <div className="relative z-10 mx-auto max-w-[1600px] px-6 md:px-10">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
-          <div>
-            <p
-              data-contact-reveal
-              className="text-xs font-semibold uppercase tracking-widest text-white/40"
-            >
-              Contact
-            </p>
-            <h2
-              data-contact-reveal
-              className="font-hero-display mt-4 text-[clamp(2.2rem,6vw,4.5rem)] font-semibold leading-[0.98] tracking-[-0.03em]"
-            >
-              Let&apos;s work
-              <br />
-              together.
-            </h2>
-            <p
-              data-contact-reveal
-              className="mt-6 max-w-[560px] text-sm md:text-base leading-relaxed text-white/50"
-            >
-              Have a project in mind — business software, an ecommerce platform,
-              or an operational system? Tell me what you&apos;re building and
-              I&apos;ll get back to you with how I can help.
-            </p>
-
-            <div data-contact-reveal className="mt-10 space-y-3">
-              <ResumeLink layout="row" />
-              {DIRECT_LINKS.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                  className="group flex items-center gap-4 rounded-xl border border-white/10 bg-white/4 px-4 py-3 transition-all duration-200 hover:border-white/25 hover:bg-white/8"
-                >
-                  <span className="text-sm font-semibold text-white/80 group-hover:text-white">
-                    {link.name}
-                  </span>
-                  <span className="hidden text-xs text-white/35 sm:block">
-                    {link.label}
-                  </span>
-                  <span className="ml-auto text-white/35 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-white/70">
-                    →
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <form
-            name="contact"
-            method="POST"
-            action="https://vinayakdubey.com/"
-            acceptCharset="utf-8"
-            data-netlify="true"
-            netlify-honeypot="bot-field"
-            onSubmit={handleSubmit}
-            data-contact-reveal
-            className="rounded-2xl border border-white/10 bg-white/4 p-6 md:p-10"
-          >
+    <>
+      <section id="contact" className="contact-section section-dark" aria-labelledby="contact-heading">
+        <div className="page-width"><div className="contact-grid"><div className="contact-copy"><p className="eyebrow">Start a conversation</p><h2 id="contact-heading">Have something<br /><em>in mind?</em></h2><p className="contact-copy__lead">Tell me what you&apos;re building, where the friction is, and what a useful outcome looks like. I&apos;ll get back to you with a thoughtful next step.</p><div className="direct-links">{DIRECT_LINKS.map((link) => <a key={link.name} href={link.href} target={link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}><span><strong>{link.name}</strong><small>{link.label}</small></span><span aria-hidden="true">↗</span></a>)}</div></div>
+          <form name="contact" method="POST" action="https://vinayakdubey.com/" acceptCharset="utf-8" data-netlify="true" netlify-honeypot="bot-field" onSubmit={() => setStatus("submitting")} className="contact-form">
             <input type="hidden" name="form-name" value="contact" />
-            <p className="hidden" aria-hidden="true">
-              <label>
-                Don&apos;t fill this out if you&apos;re human:
-                <input name="bot-field" tabIndex={-1} autoComplete="off" />
-              </label>
-            </p>
-
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label htmlFor="contact-name" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
-                  Name
-                </label>
-                <input
-                  id="contact-name"
-                  name="name"
-                  type="text"
-                  required
-                  maxLength={80}
-                  placeholder="Your name"
-                  className={inputClasses}
-                />
-              </div>
-              <div>
-                <label htmlFor="contact-email" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
-                  Email
-                </label>
-                <input
-                  id="contact-email"
-                  name="email"
-                  type="email"
-                  required
-                  maxLength={120}
-                  placeholder="you@example.com"
-                  className={inputClasses}
-                />
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <span id="contact-project-type-label" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
-                What do you want to build?
-              </span>
-              <div
-                role="radiogroup"
-                aria-labelledby="contact-project-type-label"
-                className="flex flex-wrap gap-2"
-              >
-                {PROJECT_TYPES.map((type) => {
-                  const selected = projectType === type;
-                  return (
-                    <label
-                      key={type}
-                      className={`cursor-pointer rounded-full border px-4 py-2 text-xs font-medium transition-all duration-200 select-none ${
-                        selected
-                          ? "border-[#f5f5f7] bg-[#f5f5f7] text-[#050505]"
-                          : "border-white/10 bg-white/5 text-white/60 hover:border-white/30 hover:text-white"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="project-type"
-                        value={type}
-                        required
-                        checked={selected}
-                        onChange={() => setProjectType(type)}
-                        className="sr-only"
-                      />
-                      {type}
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="mt-5">
-              <label htmlFor="contact-message" className="mb-2 block text-xs font-medium uppercase tracking-widest text-white/40">
-                Project details <span className="normal-case tracking-normal text-white/30">(optional)</span>
-              </label>
-              <textarea
-                id="contact-message"
-                name="message"
-                rows={5}
-                maxLength={2000}
-                placeholder="Anything else? Timeline, features, links..."
-                className={`${inputClasses} resize-y`}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={status === "submitting"}
-              className="mt-6 w-full rounded-xl bg-[#f5f5f7] px-6 py-3.5 text-sm font-semibold text-[#050505] transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
-            >
-              {status === "submitting" ? "Sending..." : "Send message"}
-            </button>
-
-            <div role="status" aria-live="polite" className="mt-4 min-h-[1.5rem]">
-              {status === "success" && (
-                <p className="text-sm font-medium text-[#34d399]">
-                  Thanks! Your message has been sent — I&apos;ll get back to you shortly.
-                </p>
-              )}
-              {status === "error" && (
-                <p className="text-sm font-medium text-[#f87171]">
-                  Something went wrong. Please try again, or reach me directly on WhatsApp.
-                </p>
-              )}
-            </div>
+            <p className="honeypot" aria-hidden="true"><label>Don&apos;t fill this out if you&apos;re human:<input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
+            <div className="form-row"><label htmlFor="contact-name">Name<input className={inputClass} id="contact-name" name="name" type="text" required maxLength={80} placeholder="Your name" /></label><label htmlFor="contact-email">Email<input className={inputClass} id="contact-email" name="email" type="email" required maxLength={120} placeholder="you@example.com" /></label></div>
+            <fieldset><legend>What do you want to build?</legend><div className="choice-list">{PROJECT_TYPES.map((type) => <label className={projectType === type ? "choice is-selected" : "choice"} key={type}><input type="radio" name="project-type" value={type} required checked={projectType === type} onChange={() => setProjectType(type)} />{type}</label>)}</div></fieldset>
+            <label htmlFor="contact-message">Project details <span>(optional)</span><textarea className={inputClass} id="contact-message" name="message" rows="5" maxLength={2000} placeholder="Timeline, features, links, or anything else worth knowing..." /></label>
+            <div className="form-submit"><button className="button button--light" type="submit" disabled={status === "submitting"}>{status === "submitting" ? "Sending…" : "Send message"} <span aria-hidden="true">↗</span></button><p role="status" aria-live="polite">{status === "submitting" ? "Opening the secure submission…" : "Usually replies within a few working days."}</p></div>
           </form>
-        </div>
-      </div>
-    </section>
+        </div></div>
+      </section>
+      <footer className="site-footer"><div className="page-width site-footer__inner"><a className="site-nav__brand" href="#top"><span className="site-nav__mark" aria-hidden="true">VD</span><span>Vinayak Dubey</span></a><p>Full-stack developer &amp; software engineer</p><a href="mailto:hello@vinayakdubey.com">hello@vinayakdubey.com</a><span>© {new Date().getFullYear()} Vinayak Dubey</span></div></footer>
+    </>
   );
 };
 
