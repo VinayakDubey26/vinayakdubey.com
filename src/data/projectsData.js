@@ -212,7 +212,7 @@ export const softwareProjects = [
   {
     id: "inventory-platform",
     title: "Custom Business Management Software",
-    status: "Prototype",
+    status: "Built",
     categoryLabel: "DESKTOP SOFTWARE",
     description:
       "Custom operational software built around a business's own inventory, records, reporting and day-to-day workflows.",
