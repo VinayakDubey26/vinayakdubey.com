@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { ScrollProvider } from "./context/ScrollContext";
-import SiteNav from "./components/SiteNav";
 import EditorialHero from "./components/EditorialHero";
 import EditorialWork from "./components/EditorialWork";
 import EditorialServices from "./components/EditorialServices";
@@ -12,7 +11,6 @@ function App() {
 
   return (
     <ScrollProvider value={scrollRef}>
-      <SiteNav />
       <main>
         <EditorialHero />
         <EditorialWork />
