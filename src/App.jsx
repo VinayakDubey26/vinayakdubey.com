@@ -13,8 +13,7 @@ const getInitialTheme = () => {
     return document.documentElement.dataset.theme;
   }
 
-  if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
-  return "light";
+  return "dark";
 };
 
 const persistTheme = (theme) => {
