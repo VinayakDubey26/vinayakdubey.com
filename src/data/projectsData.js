@@ -65,8 +65,7 @@ export const websiteProjects = [
   {
     id: "arivaa",
     title: "Luxury Jewellery Ecommerce",
-    status: "Live",
-    liveUrl: "https://arivaa-jewellery.netlify.app/",
+    status: "Built",
     categoryLabel: "JEWELLERY ECOMMERCE",
     description:
       "A modern fashion ecommerce experience focused on premium branding, product discovery and responsive shopping experiences.",
@@ -88,8 +87,7 @@ export const websiteProjects = [
   {
     id: "dp-website",
     title: "Diamond Business Website",
-    status: "Live",
-    liveUrl: "https://dpjewelsdiamond.netlify.app/",
+    status: "Built",
     categoryLabel: "CORPORATE WEBSITE",
     description:
       "Corporate website showcasing international diamond sourcing, certifications and business capabilities.",
