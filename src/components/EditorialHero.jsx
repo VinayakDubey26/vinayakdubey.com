@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 const SOCIALS = [
-  { label: "GitHub", href: "https://github.com/VinayakDubey26" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/" },
-  { label: "WhatsApp", href: "https://wa.me/917021533178" },
+  { label: "GitHub", short: "GH", tone: "github", href: "https://github.com/VinayakDubey26" },
+  { label: "LinkedIn", short: "in", tone: "linkedin", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/" },
+  { label: "WhatsApp", short: "WA", tone: "whatsapp", href: "https://wa.me/917021533178" },
 ];
 
 const EditorialHero = () => {
@@ -25,7 +25,7 @@ const EditorialHero = () => {
           <p className="hero-intro">I&apos;m Vinayak Dubey — a full-stack developer building custom business applications, ecommerce platforms, AI-powered tools, and operational systems.</p>
           <div className="hero-actions"><a className="button button--dark" href="#work">Explore Work <span aria-hidden="true">↘</span></a><a className="text-link" href="#contact">Start a Project <span aria-hidden="true">↗</span></a></div>
         </div>
-        <div className="hero-foot reveal-item"><div className="hero-socials" aria-label="Social links">{SOCIALS.map((social) => <a key={social.label} href={social.href} target="_blank" rel="noopener noreferrer">{social.label}</a>)}</div><a className="scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
+        <div className="hero-foot reveal-item"><div className="hero-socials" aria-label="Social links">{SOCIALS.map((social) => <a className={`hero-socials__link hero-socials__link--${social.tone}`} key={social.label} href={social.href} target="_blank" rel="noopener noreferrer"><span className="hero-socials__icon" aria-hidden="true">{social.short}</span><span>{social.label}</span></a>)}</div><a className="scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
       </div>
     </section>
   );
