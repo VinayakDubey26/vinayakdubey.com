@@ -6,9 +6,9 @@ import ProjectModal from "./ProjectModal";
 import ErrorBoundary from "./ErrorBoundary";
 
 const groups = [
-  { label: "Web experiences", kicker: "01 / Websites", projects: websiteProjects },
-  { label: "Business systems", kicker: "02 / Software", projects: softwareProjects },
-  { label: "Mobile products", kicker: "03 / Mobile", projects: mobileProjects },
+  { slug: "websites", label: "Web experiences", kicker: "01 / Websites", projects: websiteProjects },
+  { slug: "software", label: "Business systems", kicker: "02 / Business systems", projects: softwareProjects },
+  { slug: "mobile", label: "Mobile products", kicker: "03 / Mobile projects", projects: mobileProjects },
 ];
 
 const statusClass = (status = "Concept") => status.toLowerCase().replaceAll(" ", "-");
@@ -47,7 +47,7 @@ const EditorialWork = () => {
         <div className="section-intro section-intro--split"><div><p className="eyebrow">Selected work</p><h2 id="work-heading">Systems with a point<br /><em>of view.</em></h2></div><p className="section-intro__copy">A selection of software platforms, ecommerce experiences, and operational tools designed and engineered from the ground up.</p></div>
         {groups.map((group) => {
           const isMobile = group.kicker.includes("Mobile");
-          return <div className="work-group" key={group.kicker}><div className="work-group__heading"><p className="eyebrow">{group.kicker}</p><h3>{group.label}</h3></div><div className={`work-grid ${isMobile ? "work-grid--mobile" : ""}`}>{group.projects.map((project, index) => <ProjectTile key={project.id} project={project} index={index} featured={isMobile} onOpen={setModalProject} />)}</div></div>;
+          return <div className={`work-group work-group--${group.slug}`} key={group.kicker}><div className="work-group__heading"><p className="eyebrow">{group.kicker}</p><h3>{group.label}</h3></div><div className={`work-grid ${isMobile ? "work-grid--mobile" : ""}`}>{group.projects.map((project, index) => <ProjectTile key={project.id} project={project} index={index} featured={isMobile} onOpen={setModalProject} />)}</div></div>;
         })}
       </div>
       {modalProject && createPortal(<ErrorBoundary fallback={null}><ProjectModal key={modalProject.id} project={modalProject} onClose={() => setModalProject(null)} /></ErrorBoundary>, document.body)}
