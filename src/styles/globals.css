@@ -170,6 +170,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 .service-card__action { display: inline-flex; flex: none; align-items: center; gap: 0.5rem; color: var(--ink); font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .service-card__action span { color: var(--cobalt-dark); transition: transform 220ms var(--ease); }
 .service-card__action:hover span, .service-card__action:focus-visible span { transform: translate(2px, -2px); }
+.service-toolkit { margin: 0 0 clamp(3rem, 5vw, 4.5rem); color: var(--lilac-dark); font-family: var(--mono); font-size: 0.8rem; line-height: 1.6; }
 
 .about-section { padding: clamp(4rem, 6vw, 5.5rem) 0; }
 .about-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr); gap: 2.5rem clamp(2.5rem, 8vw, 8rem); }

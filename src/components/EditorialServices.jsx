@@ -1,3 +1,5 @@
+import { techStack } from "../data/skills";
+
 const SERVICES = [
   {
     number: "01",
@@ -60,6 +62,7 @@ const EditorialServices = () => (
           </article>
         ))}
       </div>
+      <p className="service-toolkit">Also in the toolkit: {techStack.filter((skill) => !SERVICES.some((service) => service.technologies.includes(skill))).join(" · ")}</p>
     </div>
   </section>
 );
