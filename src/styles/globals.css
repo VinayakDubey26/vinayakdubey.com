@@ -120,13 +120,13 @@ section[id] { scroll-margin-top: 1.5rem; }
 .work-group--software .work-group__heading .eyebrow { color: var(--coral-dark); }
 .work-group--mobile .work-group__heading .eyebrow { color: var(--cobalt-dark); }
 .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(2rem, 3.3vw, 3rem) clamp(1.25rem, 2.7vw, 2.75rem); padding-top: clamp(1.25rem, 2vw, 2rem); }
-.work-tile { min-width: 0; transition: opacity 230ms ease; }
+.work-tile { min-width: 0; --tile-hover-opacity: 1; opacity: var(--tile-reveal-opacity, 1); opacity: min(var(--tile-reveal-opacity, 1), var(--tile-hover-opacity)); transition: opacity 250ms ease; }
 .work-tile__media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: pointer; line-height: 0; text-align: left; }
 .work-tile__media img { width: 100%; height: auto; object-fit: contain; transition: none; }
 .project-modal-open .work-tile { opacity: 1 !important; }
 @media (hover: hover) and (pointer: fine) {
   .work-grid:has(.work-tile:hover) .work-tile:not(:hover),
-  .work-grid:has(.work-tile:focus-within) .work-tile:not(:focus-within) { opacity: 0.7; }
+  .work-grid:has(.work-tile:focus-within) .work-tile:not(:focus-within) { --tile-hover-opacity: 0.65; }
 }
 .work-tile__meta, .work-tile__foot { display: flex; justify-content: space-between; gap: 1rem; }
 .work-tile__meta { align-items: start; margin-top: 0.9rem; }

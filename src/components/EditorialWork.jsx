@@ -20,8 +20,8 @@ const ProjectTile = ({ project, featured, index, onOpen }) => {
   return (
     <motion.article
       className={`work-tile ${featured ? "work-tile--featured" : ""}`}
-      initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ "--tile-reveal-opacity": 0, y: reduceMotion ? 0 : 20 }}
+      whileInView={{ "--tile-reveal-opacity": 1, y: 0 }}
       viewport={{ once: true, amount: 0.16 }}
       transition={{ duration: reduceMotion ? 0.2 : 0.55, delay: reduceMotion ? 0 : Math.min(index * 0.07, 0.28), ease: [0.22, 1, 0.36, 1] }}
     >
