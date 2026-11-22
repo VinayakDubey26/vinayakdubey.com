@@ -10,6 +10,7 @@ export function ScrollProvider({ children, value }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLenisRef() {
   return useContext(ScrollContext);
 }

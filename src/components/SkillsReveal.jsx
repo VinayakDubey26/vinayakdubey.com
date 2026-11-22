@@ -68,8 +68,6 @@ const FADE_IN_END = 1;
 const DROP_END = 0.55;
 const TYPING_PARA = "top bottom";
 const TYPING_END = "top 50%";
-const SKILL_ENTER = "top 92%";
-
 const SkillsReveal = () => {
   const sectionRef = useRef(null);
   const introRef = useRef(null);

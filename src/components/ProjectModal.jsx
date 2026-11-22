@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+/* eslint-disable react-hooks/refs */
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { getProjectImage, isVideoFile } from "../data/projectsData";
 import { useLenisRef } from "../context/ScrollContext";
@@ -25,8 +26,6 @@ const statusLabel = {
 };
 
 const defaultAccent = "#A0A0A0";
-const defaultSecondary = "#6B7B8D";
-
 const sectionLabels = [
   { key: "overview", label: "Overview" },
   { key: "stack", label: "Stack" },
@@ -77,7 +76,7 @@ const ProjectModal = ({ project, onClose }) => {
   const accent = project.accent || defaultAccent;
   const accentRgb = hexToRgb(accent);
 
-  const images = project.images || [];
+  const images = useMemo(() => project.images || [], [project.images]);
   const total = images.length;
   const lenisRefCtx = useLenisRef();
   const isSoftware = !!project.techStack;
@@ -127,8 +126,6 @@ const ProjectModal = ({ project, onClose }) => {
     if (lenis) lenis.stop();
 
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
-    setIndex(0);
-
     // Make first image visible immediately, hide the rest.
     mediaRefs.current.forEach((el, i) => {
       if (!el) return;
@@ -262,7 +259,7 @@ const ProjectModal = ({ project, onClose }) => {
     dragState.current.moved = false;
     // Capture the pointer so move/up events fire even if finger drifts off element
     if (e.target.setPointerCapture) {
-      try { e.target.setPointerCapture(e.pointerId); } catch {}
+      try { e.target.setPointerCapture(e.pointerId); } catch { /* Pointer capture may already be released. */ }
     }
   };
 
@@ -277,7 +274,7 @@ const ProjectModal = ({ project, onClose }) => {
     const diff = e.clientX - dragState.current.startX;
     dragState.current.isDown = false;
     if (e.target.releasePointerCapture) {
-      try { e.target.releasePointerCapture(e.pointerId); } catch {}
+      try { e.target.releasePointerCapture(e.pointerId); } catch { /* Pointer capture may already be released. */ }
     }
     if (!dragState.current.moved) return;
     if (Math.abs(diff) > 30) {
@@ -961,7 +958,7 @@ const ProjectModal = ({ project, onClose }) => {
         <div
           className="fixed inset-0 z-[80] flex items-center justify-center"
           style={{ background: "rgba(4,4,4,0.97)", touchAction: "pan-y" }}
-          onClick={(e) => { if (!lbDragState.current.moved) closeLightbox(); }}
+          onClick={() => { if (!lbDragState.current.moved) closeLightbox(); }}
           onPointerDown={(e) => { lbDragState.current.startX = e.clientX; lbDragState.current.moved = false; }}
           onPointerMove={(e) => { if (Math.abs(e.clientX - lbDragState.current.startX) > 10) lbDragState.current.moved = true; }}
           onPointerUp={(e) => {

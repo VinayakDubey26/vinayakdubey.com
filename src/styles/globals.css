@@ -44,7 +44,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 .section-dark .section-intro__copy { color: var(--muted-dark); }
 
 .site-nav { position: fixed; z-index: 50; top: 0; left: 0; width: 100%; border-bottom: 1px solid rgba(18, 19, 19, 0.1); background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(16px); }
-.site-nav__inner { display: flex; align-items: center; width: min(100% - (var(--page-gutter) * 2), 1440px); min-height: 4.6rem; margin-inline: auto; gap: 2rem; }
+.site-nav__inner { position: relative; z-index: 2; display: flex; align-items: center; width: min(100% - (var(--page-gutter) * 2), 1440px); min-height: 4.6rem; margin-inline: auto; gap: 2rem; }
 .site-nav__brand { display: inline-flex; align-items: center; gap: 0.65rem; font-size: 0.9rem; font-weight: 600; letter-spacing: -0.02em; white-space: nowrap; }
 .site-nav__mark { display: inline-grid; width: 1.8rem; height: 1.8rem; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-family: var(--mono); font-size: 0.56rem; letter-spacing: -0.08em; }
 .site-nav__links { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2.5rem); margin-inline: auto; }
@@ -59,7 +59,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 .nav-cta:hover span, .button:hover span, .text-link:hover span { transform: translate(2px, -2px); }
 .menu-toggle { display: none; width: 2.7rem; height: 2.7rem; margin-left: auto; padding: 0.65rem; border: 1px solid var(--line); border-radius: 50%; background: transparent; cursor: pointer; }
 .menu-toggle span { display: block; width: 100%; height: 1px; margin: 0.32rem 0; background: currentColor; transition: transform 180ms ease; }
-.mobile-menu { position: fixed; inset: 4.6rem 0 0; z-index: -1; padding: 2.5rem var(--page-gutter); background: var(--paper); animation: menu-in 220ms var(--ease) both; }
+.mobile-menu { position: fixed; inset: 4.6rem 0 0; z-index: 1; padding: 2.5rem var(--page-gutter); background: var(--paper); animation: menu-in 220ms var(--ease) both; }
 .mobile-menu nav { display: grid; margin-top: 2rem; }
 .mobile-menu nav a { display: flex; align-items: center; gap: 1.5rem; padding: 1rem 0; border-bottom: 1px solid var(--line); font-family: var(--display); font-size: clamp(2rem, 10vw, 4rem); letter-spacing: -0.05em; }
 .mobile-menu nav a span { color: var(--muted); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0; }

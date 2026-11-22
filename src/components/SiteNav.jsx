@@ -70,7 +70,7 @@ const SiteNav = () => {
         </a>
         <nav className="site-nav__links" aria-label="Primary navigation">
           {LINKS.map((link) => (
-            <a key={link.href} className={active === link.href.slice(1) ? "is-active" : ""} href={link.href}>{link.label}</a>
+            <a key={link.href} className={active === link.href.slice(1) ? "is-active" : ""} aria-current={active === link.href.slice(1) ? "location" : undefined} href={link.href}>{link.label}</a>
           ))}
         </nav>
         <a className="nav-cta" href="#contact">Start a project <span aria-hidden="true">↗</span></a>
@@ -84,7 +84,7 @@ const SiteNav = () => {
           <p className="eyebrow">Navigate</p>
           <nav aria-label="Mobile primary navigation">
             {LINKS.map((link, index) => (
-              <a key={link.href} href={link.href} onClick={closeMenu}><span>0{index + 1}</span>{link.label}</a>
+              <a key={link.href} aria-current={active === link.href.slice(1) ? "location" : undefined} href={link.href} onClick={closeMenu}><span>0{index + 1}</span>{link.label}</a>
             ))}
             <a className="mobile-menu__cta" href="#contact" onClick={closeMenu}>Start a project <span aria-hidden="true">↗</span></a>
           </nav>
