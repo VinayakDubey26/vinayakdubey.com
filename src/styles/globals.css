@@ -121,7 +121,7 @@ section[id] { scroll-margin-top: 5.5rem; }
 .work-grid--mobile .work-tile { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr); gap: 0 2.5rem; padding: 2rem 0; border-bottom: 1px solid var(--line); }
 .work-grid--mobile .work-tile__media { grid-row: 1 / span 3; aspect-ratio: 1.42; }
 .work-grid--mobile .work-tile__media { aspect-ratio: 1.05; background: var(--ink-soft); }
-.work-grid--mobile .work-tile__media img { object-fit: contain; padding: 1.5rem; }
+.work-grid--mobile .work-tile__media img { object-fit: contain; padding: 0; }
 .work-grid--mobile .work-tile__meta { margin-top: 0; }
 .work-grid--mobile .work-tile__description, .work-grid--mobile .work-tile__foot { grid-column: 2; }
 
