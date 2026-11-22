@@ -267,7 +267,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visib
 @keyframes menu-in { from { opacity: 0; transform: translateY(-0.5rem); } to { opacity: 1; transform: translateY(0); } }
 
 @media (max-width: 900px) {
-  .contact-grid { gap: 3rem; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
 }
 
 @media (max-width: 800px) {
