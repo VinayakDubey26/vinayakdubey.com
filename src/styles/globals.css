@@ -95,7 +95,7 @@ section[id] { scroll-margin-top: 1.5rem; }
 .hero-foot { display: flex; justify-content: space-between; align-items: center; margin-top: clamp(2.75rem, 5vw, 4.25rem); padding-top: 1.1rem; border-top: 1px solid var(--line); }
 .hero-socials { display: flex; flex-wrap: wrap; gap: 0.7rem 1.15rem; }
 .hero-socials a, .scroll-cue { color: var(--muted); font-family: var(--mono); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; transition: color 180ms ease; }
-.hero-socials a { display: inline-flex; min-height: 2rem; align-items: center; gap: 0.45rem; }
+.hero-socials a { display: inline-flex; width: 2.75rem; height: 2.75rem; align-items: center; justify-content: center; }
 .hero-socials a:hover, .scroll-cue:hover { color: var(--cobalt-dark); }
 .hero-socials__icon { display: block; width: 1.45rem; height: 1.45rem; padding: 0.28rem; border-radius: 0.35rem; background: var(--social-color); color: var(--white); }
 .hero-socials__icon path { fill: currentColor; }

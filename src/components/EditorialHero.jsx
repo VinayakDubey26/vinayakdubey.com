@@ -40,7 +40,7 @@ const EditorialHero = () => {
           <p className="hero-intro">I&apos;m Vinayak Dubey — a full-stack developer building custom business applications, ecommerce platforms, AI-powered tools, and operational systems.</p>
           <div className="hero-actions"><a className="button button--dark" href="#work">Explore Work <span aria-hidden="true">↘</span></a><a className="text-link" href="#contact">Start a Project <span aria-hidden="true">↗</span></a></div>
         </div>
-        <div className="hero-foot reveal-item"><div className="hero-socials" aria-label="Social links">{SOCIALS.map((social) => <a className={`hero-socials__link hero-socials__link--${social.tone}`} key={social.label} href={social.href} target="_blank" rel="noopener noreferrer"><svg className="hero-socials__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={social.iconPath} /></svg><span>{social.label}</span></a>)}</div><a className="scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
+        <div className="hero-foot reveal-item"><div className="hero-socials" aria-label="Social links">{SOCIALS.map((social) => <a className={`hero-socials__link hero-socials__link--${social.tone}`} key={social.label} href={social.href} target="_blank" rel="noopener noreferrer" aria-label={social.label} title={social.label}><svg className="hero-socials__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d={social.iconPath} /></svg></a>)}</div><a className="scroll-cue" href="#work">Scroll to explore <span aria-hidden="true">↓</span></a></div>
       </div>
     </section>
   );
