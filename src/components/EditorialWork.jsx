@@ -25,20 +25,17 @@ const ProjectTile = ({ project, featured, onOpen }) => {
         <span className={`status-pill status-pill--${statusClass(project.status)}`}>{project.status}</span>
       </div>
       <p className="work-tile__description">{project.description}</p>
-      <div className="work-tile__foot"><div className="tag-list">{project.technologies.slice(0, 4).map((technology) => <span key={technology}>{technology}</span>)}</div><button className="inline-arrow" type="button" onClick={() => onOpen(project)}>Details <span aria-hidden="true">↗</span></button></div>
+      <div className="work-tile__foot"><div className="tag-list">{project.technologies.slice(0, 4).map((technology) => <span key={technology}>{technology}</span>)}</div><div className="work-tile__actions"><button className="inline-arrow" type="button" onClick={() => onOpen(project)}>Details <span aria-hidden="true">↗</span></button>{project.liveUrl && <a className="inline-arrow" href={project.liveUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${project.title} live website`}>Visit website <span aria-hidden="true">↗</span></a>}</div></div>
     </article>
   );
 };
 
 const EditorialWork = () => {
   const [modalProject, setModalProject] = useState(null);
-  const featured = softwareProjects[0];
-
   return (
     <section id="work" className="work-section section-light" aria-labelledby="work-heading">
       <div className="page-width">
         <div className="section-intro section-intro--split"><div><p className="eyebrow">Selected work</p><h2 id="work-heading">Systems with a point<br /><em>of view.</em></h2></div><p className="section-intro__copy">A selection of software platforms, ecommerce experiences, and operational tools designed and engineered from the ground up.</p></div>
-        <div className="featured-project"><div className="featured-project__image"><img src={getProjectImage(featured.folder, featured.images[0])} alt={`${featured.title} dashboard preview`} loading="eager" /><span className="featured-project__index">Featured / 01</span></div><div className="featured-project__body"><div><p className="eyebrow">{featured.categoryLabel}</p><h3>{featured.title}</h3><p>{featured.description}</p></div><div className="featured-project__details"><p>{featured.impact}</p><div className="tag-list">{featured.technologies.map((technology) => <span key={technology}>{technology}</span>)}</div><button className="button button--dark" type="button" onClick={() => setModalProject(featured)}>Open case study <span aria-hidden="true">↗</span></button></div></div></div>
         {groups.map((group) => {
           const isMobile = group.kicker.includes("Mobile");
           return <div className="work-group" key={group.kicker}><div className="work-group__heading"><p className="eyebrow">{group.kicker}</p><h3>{group.label}</h3></div><div className={`work-grid ${isMobile ? "work-grid--mobile" : ""}`}>{group.projects.map((project) => <ProjectTile key={project.id} project={project} featured={isMobile} onOpen={setModalProject} />)}</div></div>;
