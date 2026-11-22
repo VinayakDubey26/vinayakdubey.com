@@ -6,6 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Vinayak Dubey is an independent full-stack developer and software engineer building custom business software, ecommerce platforms, AI-powered tools, and operational systems." />
     <meta name="theme-color" content="#f5f2ea" />
+    <script>
+      (() => {
+        const key = "vinayak-theme";
+        let storedTheme = null;
+        try {
+          storedTheme = window.localStorage.getItem(key);
+        } catch {
+          storedTheme = null;
+        }
+        const theme = storedTheme === "dark" || storedTheme === "light"
+          ? storedTheme
+          : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "dark" ? "#14161b" : "#f5f2ea");
+      })();
+    </script>
     <meta property="og:title" content="Vinayak Dubey — Full-Stack Developer & Software Engineer" />
     <meta property="og:description" content="Custom business software, ecommerce platforms, AI-powered tools, and operational systems." />
     <meta property="og:type" content="website" />
