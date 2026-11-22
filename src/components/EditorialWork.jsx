@@ -27,7 +27,6 @@ const ProjectTile = ({ project, featured, index, onOpen }) => {
     >
       <button className={`work-tile__media work-tile__media--${imageMode}`} type="button" onClick={() => onOpen(project)} aria-label={`View details for ${project.title}`}>
         <img src={image} alt={`${project.title} project preview`} loading={featured ? "eager" : "lazy"} />
-        <span className="work-tile__view">View project <span aria-hidden="true">↗</span></span>
       </button>
       <div className="work-tile__meta">
         <div><p className="work-tile__category">{project.categoryLabel || project.category}</p><h3>{project.title}</h3></div>

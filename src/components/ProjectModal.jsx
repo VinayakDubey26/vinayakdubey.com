@@ -138,6 +138,7 @@ const ProjectModal = ({ project, onClose }) => {
   useEffect(() => {
     const lenis = lenisRefCtx?.current;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("project-modal-open");
     if (lenis) lenis.stop();
 
     if (scrollRef.current) scrollRef.current.scrollTop = 0;
@@ -153,6 +154,7 @@ const ProjectModal = ({ project, onClose }) => {
 
     return () => {
       document.body.style.overflow = "";
+      document.body.classList.remove("project-modal-open");
       if (lenis) lenis.start();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
