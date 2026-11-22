@@ -12,7 +12,7 @@ const SERVICES = [
   {
     number: "02",
     title: "Ecommerce Platforms",
-    accent: "coral",
+    accent: "cobalt",
     description: "Distinctive storefronts and product experiences that make discovery feel effortless and give a brand room to grow.",
     capabilities: "Commerce journeys, product presentation, responsive storefronts, and conversion-aware interactions.",
     technologies: ["React", "JavaScript", "Shopify", "GSAP", "CSS"],
@@ -20,7 +20,7 @@ const SERVICES = [
   {
     number: "03",
     title: "AI & Automation",
-    accent: "lilac",
+    accent: "cobalt",
     description: "Practical AI integrations and automation patterns used where they make a process clearer, faster, or easier to operate.",
     capabilities: "AI-assisted tools, agents, retrieval patterns, and workflow automation grounded in a real business need.",
     technologies: ["AI integrations", "Agents", "RAG", "Automation", "Python"],
@@ -36,7 +36,7 @@ const SERVICES = [
 ];
 
 const EditorialServices = () => (
-  <section id="services" className="services-section section-lilac" aria-labelledby="services-heading">
+  <section id="services" className="services-section section-light" aria-labelledby="services-heading">
     <div className="page-width">
       <div className="section-intro section-intro--split">
         <div>
