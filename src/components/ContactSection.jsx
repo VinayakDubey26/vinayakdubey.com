@@ -5,6 +5,7 @@ const DIRECT_LINKS = [
   { name: "WhatsApp", href: "https://wa.me/917021533178", label: "Chat directly" },
   { name: "LinkedIn", href: "https://www.linkedin.com/in/vinayak-dubey-0b187a293/", label: "Connect professionally" },
   { name: "GitHub", href: "https://github.com/VinayakDubey26", label: "See the code" },
+  { name: "Résumé", href: "#", label: "PDF coming soon", disabled: true },
 ];
 
 const PROJECT_TYPES = ["Business software", "Mobile app", "Ecommerce website", "Business website", "Operational system", "Something else"];
@@ -17,7 +18,7 @@ const ContactSection = () => {
   return (
     <>
       <section id="contact" className="contact-section section-dark" aria-labelledby="contact-heading">
-        <div className="page-width"><div className="contact-grid"><div className="contact-copy"><p className="eyebrow">Start a conversation</p><h2 id="contact-heading">Have something<br /><em>in mind?</em></h2><p className="contact-copy__lead">Tell me what you&apos;re building, where the friction is, and what a useful outcome looks like. I&apos;ll get back to you with a thoughtful next step.</p><div className="direct-links">{DIRECT_LINKS.map((link) => <a key={link.name} href={link.href} target={link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}><span><strong>{link.name}</strong><small>{link.label}</small></span><span aria-hidden="true">↗</span></a>)}</div></div>
+        <div className="page-width"><div className="contact-grid"><div className="contact-copy"><p className="eyebrow">Start a conversation</p><h2 id="contact-heading">Have something<br /><em>in mind?</em></h2><p className="contact-copy__lead">Tell me what you&apos;re building, where the friction is, and what a useful outcome looks like. I&apos;ll get back to you with a thoughtful next step.</p><div className="direct-links">{DIRECT_LINKS.map((link) => <a key={link.name} href={link.href} aria-disabled={link.disabled || undefined} onClick={link.disabled ? (event) => event.preventDefault() : undefined} target={link.disabled || link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.disabled || link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}><span><strong>{link.name}</strong><small>{link.label}</small></span><span aria-hidden="true">{link.disabled ? "—" : "↗"}</span></a>)}</div></div>
           <form name="contact" method="POST" action="https://vinayakdubey.com/" acceptCharset="utf-8" data-netlify="true" netlify-honeypot="bot-field" onSubmit={() => setStatus("submitting")} className="contact-form">
             <input type="hidden" name="form-name" value="contact" />
             <p className="honeypot" aria-hidden="true"><label>Don&apos;t fill this out if you&apos;re human:<input name="bot-field" tabIndex={-1} autoComplete="off" /></label></p>
