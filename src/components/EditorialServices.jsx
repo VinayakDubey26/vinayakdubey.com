@@ -1,4 +1,5 @@
 import { techStack } from "../data/skills";
+import { getTechnologyIcon } from "../data/technologyIcons";
 
 const SERVICES = [
   {
@@ -35,6 +36,24 @@ const SERVICES = [
   },
 ];
 
+const toolkit = techStack.filter((skill) => !SERVICES.some((service) => service.technologies.includes(skill)));
+
+function TechnologyIcon({ name }) {
+  const iconData = getTechnologyIcon(name);
+
+  if (!iconData) return null;
+
+  const iconColor = iconData.color?.toLowerCase() === "#ffffff" ? "var(--cobalt-dark)" : iconData.color;
+
+  return (
+    <span className="technology-icon" style={{ color: iconColor }} aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d={iconData.path} />
+      </svg>
+    </span>
+  );
+}
+
 const EditorialServices = () => (
   <section id="services" className="services-section section-light" aria-labelledby="services-heading">
     <div className="page-width">
@@ -55,14 +74,30 @@ const EditorialServices = () => (
             <div className="service-card__capabilities"><p className="eyebrow">Capabilities</p><p>{service.capabilities}</p></div>
             <div className="service-card__foot">
               <ul className="service-card__tools" aria-label={`${service.title} technologies`}>
-                {service.technologies.map((technology) => <li key={technology}>{technology}</li>)}
+                {service.technologies.map((technology) => (
+                  <li key={technology}>
+                    <TechnologyIcon name={technology} />
+                    <span>{technology}</span>
+                  </li>
+                ))}
               </ul>
               <a className="service-card__action" href="#contact">Start a project <span aria-hidden="true">↗</span></a>
             </div>
           </article>
         ))}
       </div>
-      <p className="service-toolkit">Also in the toolkit: {techStack.filter((skill) => !SERVICES.some((service) => service.technologies.includes(skill))).join(" · ")}</p>
+
+      <div className="service-toolkit" aria-label="Additional toolkit">
+        <p className="service-toolkit__label">Also in the toolkit:</p>
+        <ul className="service-toolkit__list">
+          {toolkit.map((skill) => (
+            <li key={skill}>
+              <TechnologyIcon name={skill} />
+              <span>{skill}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 );
