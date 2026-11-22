@@ -128,7 +128,7 @@ section[id] { scroll-margin-top: 1.5rem; }
   .work-grid:has(.work-tile:hover) .work-tile:not(:hover),
   .work-grid:has(.work-tile:focus-within) .work-tile:not(:focus-within) { --tile-hover-opacity: 0.65; }
   .work-tile:hover .work-tile__media,
-  .work-tile:focus-within .work-tile__media { transform: scale(1.015); }
+  .work-tile:focus-within .work-tile__media { transform: scale(1.03); }
 }
 .work-tile__meta, .work-tile__foot { display: flex; justify-content: space-between; gap: 1rem; }
 .work-tile__meta { align-items: start; margin-top: 0.9rem; }
